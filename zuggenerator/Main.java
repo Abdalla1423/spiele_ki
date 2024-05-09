@@ -1,9 +1,23 @@
-import java.util.Arrays;
+package tests;
+
+import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args) {
         Board b = new Board();
-        b.readfen("2rr3/5r02/1rr1rr2r0r0/2rb3b01/2r0b04/5b0bb1/2bb2b02/3b02");
-        System.out.println((b.indextoboardfield(0,0)));
+        b.readfen("b0b0b0b0b0b0/1b0b0b0b0b0b01/8/8/8/8/1r0r0r0r0r0r01/r0r0r0r0r0r0 b");
+        while (true) {
+            System.out.println(b.boardToFEN());
+            String hasWon = b.thisPlayerHasWon();
+            if (hasWon.equals("Player blue has won!") || hasWon.equals("Player red has won!")){
+                System.out.println(hasWon);
+                break;
+            }
+            //noch niemand hat gewonnen
+            String currentMove = b.pickMove(b.possiblemoves());
+            System.out.println(currentMove);
+            String[] curr = currentMove.split("-");
+            b.updateBoard(curr[0], curr[1]);
+        }
     }
 }
