@@ -3,7 +3,7 @@ import java.util.Arrays;
 import java.util.Objects;
 
 public class Board {
-    long blauzweiteebene = 0;
+    l
     long rotzweiteebene = 0;
     long blauersteebene = 0;
     long rotersteebene = 0;
