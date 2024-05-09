@@ -312,6 +312,74 @@ void UpdateBoard(int frompo, int topo){
 
     }
 
+String BoardtoFEN(){
+
+        StringBuilder res = new StringBuilder();
+        int countempty = 0;
+        int row = 1;
+
+        for(int i = 1; i <= 64; i++){
+            if(getplayeratpos(i) == Player.R){
+                if(countempty > 0){
+                    res.append(countempty);
+                    countempty = 0;
+                }
+                res.append("r0");
+            } else if (getplayeratpos(i) == Player.RR) {
+                if(countempty > 0){
+                    res.append(countempty);
+                    countempty = 0;
+                }
+                res.append("rr");
+            }else if(getplayeratpos(i) == Player.BR){
+                if(countempty > 0){
+                    res.append(countempty);
+                    countempty = 0;
+                }
+                res.append("br");
+            }else if(getplayeratpos(i) == Player.BB){
+                if(countempty > 0){
+                    res.append(countempty);
+                    countempty = 0;
+                }
+                res.append("bb");
+            }else if(getplayeratpos(i) == Player.RB){
+                if(countempty > 0){
+                    res.append(countempty);
+                    countempty = 0;
+                }
+                res.append("rb");
+            }else if(getplayeratpos(i) == Player.B){
+                if(countempty > 0){
+                    res.append(countempty);
+                    countempty = 0;
+                }
+                res.append("b");
+            }else{
+                countempty++;
+            }
+
+            if(i%8 == 0){
+                if(countempty > 0){
+                    res.append(countempty);
+                    countempty = 0;
+                }
+                res.append("/");
+            }
+
+            if(i == 64 && blauIstDran){
+                blauIstDran = false;
+                res.append(" r");
+            }else{
+                blauIstDran = true;
+                res.append(" b");
+            }
+        }
+
+        return res.toString();
+
+    }
+
 enum Player{
     R, B, RB, BR, RR, BB, EMPTY;
 }
