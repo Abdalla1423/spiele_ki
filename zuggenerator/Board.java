@@ -185,6 +185,12 @@ public class Board {
 
                 //rot doppellt
         }
+
+        // Duplikate entfernen
+        Set<String> set = new HashSet<>(res);
+        res.clear();
+        res.addAll(set);
+        
         return res;
     }
 }
