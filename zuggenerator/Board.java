@@ -256,6 +256,62 @@ public class Board {
         return res;
     }
 }
+
+void UpdateBoard(int frompo, int topo){
+
+        Player frompos = getplayeratpos(frompo);
+        Player topos = getplayeratpos(topo);
+
+        if(frompos == Player.RR){
+            rotzweiteebene &= ~(frompo);
+        }else if(frompos == Player.BB){
+            blauzweiteebene &= ~(frompo);
+        }else if(frompos == Player.RB){
+            blauzweiteebene &= ~(frompo);
+        }else if(frompos == Player.BR){
+            rotzweiteebene &= ~(frompo);
+        }else if(frompos == Player.R){
+            rotersteebene &= ~(frompo);
+        }else if(frompos == Player.B){
+            blauersteebene &= ~(frompo);
+        }
+
+        if(topos == Player.RR){
+            rotzweiteebene &= ~(topo);
+            blauzweiteebene |= topo;
+        }else if(topos == Player.BB){
+            rotzweiteebene |= topo;
+            blauzweiteebene &= ~(topo);
+        }else if(topos == Player.RB){
+            rotzweiteebene |= topo;
+            blauzweiteebene &= ~(topo);
+        }else if(topos == Player.BR){
+            rotzweiteebene &= ~(topo);
+            blauzweiteebene |= topo;
+        }else if(topos == Player.R){
+            if(frompos == Player.RR || frompos == Player.R || frompos == Player.BR){
+                rotzweiteebene |= topo;
+            }else if(frompos == Player.RB || frompos == Player.BB){
+                blauzweiteebene |= topo;
+            }
+            else{
+                rotersteebene &= ~(topo);
+                blauersteebene |= topo;
+            }
+        }else if(topos == Player.B){
+            if(frompos == Player.BB || frompos == Player.B || frompos == Player.RB){
+                blauzweiteebene |= topo;
+            }else if(frompos == Player.BR || frompos == Player.RR){
+                rotzweiteebene |= topo;
+            }
+            else{
+                blauersteebene &= ~(topo);
+                rotersteebene |= topo;
+            }
+        }
+
+    }
+
 enum Player{
     R, B, RB, BR, RR, BB, EMPTY;
 }
