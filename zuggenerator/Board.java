@@ -327,8 +327,18 @@ public class Board {
                 blauersteebene &= ~(1L << (topo-1));
                 rotersteebene |= 1L << (topo-1);
             }
-        }
 
+        } else if (topos == Player.EMPTY) {
+            if(frompos == Player.BB || frompos == Player.B || frompos == Player.RB){
+                blauersteebene |= 1L << (topo-1);
+            }else if(frompos == Player.BR || frompos == Player.RR || frompos == Player.R){
+                rotersteebene |= 1L << (topo-1);
+            }
+            else{
+                blauersteebene &= ~(1L << (topo-1));
+                rotersteebene |= 1L << (topo-1);
+            }
+        }
     }
 
     String boardToFEN(){
@@ -336,66 +346,74 @@ public class Board {
         int countempty = 0;
         int row = 1;
 
-        for(int i = 1; i <= 64; i++){
-            if(getplayeratpos(i) == Player.R){
-                if(countempty > 0){
-                    res.append(countempty);
-                    countempty = 0;
+        for(int i = 2; i < 64; i++) {
+            if (i != 8 && i != 57) {
+                if(getplayeratpos(i) == Player.R){
+                    if(countempty > 0){
+                        res.append(countempty);
+                        countempty = 0;
+                    }
+                    res.append("r0");
+                } else if (getplayeratpos(i) == Player.RR) {
+                    if(countempty > 0){
+                        res.append(countempty);
+                        countempty = 0;
+                    }
+                    res.append("rr");
+                }else if(getplayeratpos(i) == Player.BR){
+                    if(countempty > 0){
+                        res.append(countempty);
+                        countempty = 0;
+                    }
+                    res.append("br");
+                }else if(getplayeratpos(i) == Player.BB){
+                    if(countempty > 0){
+                        res.append(countempty);
+                        countempty = 0;
+                    }
+                    res.append("bb");
+                }else if(getplayeratpos(i) == Player.RB){
+                    if(countempty > 0){
+                        res.append(countempty);
+                        countempty = 0;
+                    }
+                    res.append("rb");
+                }else if(getplayeratpos(i) == Player.B){
+                    if(countempty > 0){
+                        res.append(countempty);
+                        countempty = 0;
+                    }
+                    res.append("b0");
+                }else{
+                    countempty++;
                 }
-                res.append("r0");
-            } else if (getplayeratpos(i) == Player.RR) {
-                if(countempty > 0){
-                    res.append(countempty);
-                    countempty = 0;
-                }
-                res.append("rr");
-            }else if(getplayeratpos(i) == Player.BR){
-                if(countempty > 0){
-                    res.append(countempty);
-                    countempty = 0;
-                }
-                res.append("br");
-            }else if(getplayeratpos(i) == Player.BB){
-                if(countempty > 0){
-                    res.append(countempty);
-                    countempty = 0;
-                }
-                res.append("bb");
-            }else if(getplayeratpos(i) == Player.RB){
-                if(countempty > 0){
-                    res.append(countempty);
-                    countempty = 0;
-                }
-                res.append("rb");
-            }else if(getplayeratpos(i) == Player.B){
-                if(countempty > 0){
-                    res.append(countempty);
-                    countempty = 0;
-                }
-                res.append("b0");
-            }else{
-                countempty++;
             }
 
-            if(i%8 == 0){
-                if(countempty > 0){
-                    res.append(countempty);
-                    countempty = 0;
+                if(i%8 == 0){
+                    if(countempty > 0){
+                        res.append(countempty);
+                        countempty = 0;
+                    }
+                    res.append("/");
                 }
-                res.append("/");
-            }
+                if(i == 63 && blauIstDran){
+                    if(countempty > 0) {
+                        res.append(countempty);
+                        //countempty = 0;
+                    }
+                    blauIstDran = false;
+                    res.append(" r");
+                }else if (i == 63){
+                    if(countempty > 0) {
+                        res.append(countempty);
+                        //countempty = 0;
+                    }
+                    blauIstDran = true;
+                    res.append(" b");
 
-            if(i == 64 && blauIstDran){
-                blauIstDran = false;
-                res.append(" r");
-            }else if (i == 64){
-                blauIstDran = true;
-                res.append(" b");
-            }
+                }
         }
-
         return res.toString();
-
     }
 
     /*
