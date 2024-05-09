@@ -1,8 +1,8 @@
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Objects;
 
 public class Board {
+    boolean blauIstDran = false;
     long blauzweiteebene = 0;
     long rotzweiteebene = 0;
     long blauersteebene = 0;
@@ -38,8 +38,12 @@ public class Board {
                 } else if (acc.equals("bb")) {
                     blauersteebene = blauersteebene | number;
                     blauzweiteebene = blauzweiteebene | number;
-                } else {//b0
+                } else if(acc.equals("b0")){
                     blauersteebene = blauersteebene | number;
+                }else if(acc.equals(" b")){
+                    blauIstDran = true;
+                }else{
+                    blauIstDran = false;
                 }
                 number = number << 1;
                 i = i + 1;
@@ -76,81 +80,100 @@ public class Board {
         String res = "";
         int modCol= field % 8;
         char [] col= {'H', 'A', 'B', 'C', 'D', 'E', 'F' , 'G'};
-        int row= 8- ((field-1) / 8);
+        int row= ((field-1) / 8)+1;
         return res+col[modCol]+row;
+    }
+
+    //gibt Player R zurück, wenn rot gewonnen hat; Player B zurück, wenn blau gewonnen hat; Player EMPTY zurück, wenn noch
+    // niemand gewonnen hat
+    Player thisPLayerHasWon () {
+        //gucken, ob rot gewonnen hat
+        for (int field=1; field<8; field++) {
+            if (getplayeratpos(field)==Player.R || getplayeratpos(field)==Player.RR || getplayeratpos(field)==Player.BR) {
+                return Player.R;
+            }
+        }
+        //gucken, ob blau gewonnen hat
+        for (int field=57; field<64; field++) {
+            if (getplayeratpos(field)==Player.B || getplayeratpos(field)==Player.BB || getplayeratpos(field)==Player.RB) {
+                return Player.B;
+            }
+        }
+        //wenn noch niemand gewonnen hat
+        return Player.EMPTY;
     }
 
     ArrayList<String> possiblemoves() {
         ArrayList<String> res = new ArrayList<>();
         for (int field = 1; field < 64; field++) {
                 //blau einzel figur
-                if (getplayeratpos(field)==Player.B) {
+                if (this.blauIstDran && getplayeratpos(field)==Player.B) {
                     //zug nach vorne
-                    if ((field - 8) > 1 && (field - 8) != 8 && getplayeratpos(field - 8) == Player.EMPTY) {
+                    if ((field + 8) != 57 && (field + 8) != 64 && field<57 && getplayeratpos(field + 8) == Player.EMPTY) {
                         String cur = fieldToString(field);
-                        String to = fieldToString(field-8);
+                        String to = fieldToString(field+8);
                         res.add(cur + "-" + to);
                     }
                     //nach rechts
-                    if (!Arrays.asList(16, 24, 32, 40, 48, 56, 63).contains(field) && getplayeratpos(field + 1) == Player.EMPTY) {
+                    if (!Arrays.asList(7, 16, 24, 32, 40, 48, 56, 63).contains(field) && getplayeratpos(field + 1) == Player.EMPTY) {
                         String cur = fieldToString(field);
                         String to = fieldToString(field+1);
                         res.add(cur + "-" + to);
                     }
                     //nach links
-                    if (!Arrays.asList(9, 17, 25, 33, 41, 49, 58).contains(field) && getplayeratpos(field - 1) == Player.EMPTY) {
+                    if (!Arrays.asList(2, 9, 17, 25, 33, 41, 49, 58).contains(field) && getplayeratpos(field - 1) == Player.EMPTY) {
                         String cur = fieldToString(field);
                         String to = fieldToString(field-1);
                         res.add(cur + "-" + to);
                     }
 
                     //Diagonal nach links
-                    if (!Arrays.asList(2, 9, 10, 17, 25, 33, 41, 49).contains(field) && (getplayeratpos(field - 9) == Player.RR || getplayeratpos(field - 9) == Player.R || getplayeratpos(field - 9) == Player.BR)) {
+                    if (!Arrays.asList(9, 10, 17, 25, 33, 41, 49, 50).contains(field) && (getplayeratpos(field +7) == Player.RR || getplayeratpos(field +7) == Player.R || getplayeratpos(field +7) == Player.BR)) {
                         String cur = fieldToString(field);
-                        String to = fieldToString(field-9);
+                        String to = fieldToString(field+7);
                         res.add(cur + "-" + to);
                     }
 
                     //Diagonal nach rechts
-                    if (!Arrays.asList(16, 24, 32, 40, 48, 56, 15).contains(field) && (getplayeratpos(field - 7) == Player.RR || getplayeratpos(field - 7) == Player.R || getplayeratpos(field - 7) == Player.BR)) {
+                    if (!Arrays.asList(16, 24, 32, 40, 48, 56, 55).contains(field) && (getplayeratpos(field +9) == Player.RR || getplayeratpos(field +9) == Player.R || getplayeratpos(field +9) == Player.BR)) {
                         String cur = fieldToString(field);
-                        String to = fieldToString(field-7);
+                        String to = fieldToString(field+9);
                         res.add(cur + "-" + to);
                     }
                 }
 
                 //rot einzel figur
-                if (getplayeratpos(field)==Player.B) {
+                if (!this.blauIstDran && getplayeratpos(field)==Player.R) {
                     //zug nach vorne
-                    if ((field+8)<64 && (field+8)!=57 && getplayeratpos(field+8)==Player.EMPTY) {
+                    if ((field-8)>1 && (field-8)!=8 && getplayeratpos(field-8)==Player.EMPTY) {
                         String cur = fieldToString(field);
-                        String to = fieldToString(field+8);
+                        String to = fieldToString(field-8);
                         res.add(cur + "-" + to);
                     }
                     //nach rechts (von blau aus gesehen)
-                    if (!Arrays.asList(7, 16, 24, 32, 40, 48, 56).contains(field) && getplayeratpos(field +1)==Player.EMPTY) {
+                    if (!Arrays.asList(7, 16, 24, 32, 40, 48, 56, 63).contains(field) && getplayeratpos(field +1)==Player.EMPTY) {
                         String cur = fieldToString(field);
                         String to = fieldToString(field+1);
                         res.add(cur + "-" + to);
                     }
                     //nach links (von blau aus gesehen)
-                    if (!Arrays.asList(9, 17, 25, 33, 41, 49, 2).contains(field) && getplayeratpos(field -1)==Player.EMPTY) {
+                    if (!Arrays.asList(2, 9, 17, 25, 33, 41, 49, 58).contains(field) && getplayeratpos(field -1)==Player.EMPTY) {
                         String cur = fieldToString(field);
                         String to = fieldToString(field-1);
                         res.add(cur + "-" + to);
                     }
 
                     //Diagonal nach links (von blau aus gesehen)
-                    if (!Arrays.asList(9, 17, 25, 33, 41, 49, 50).contains(field) && (getplayeratpos(field +7)==Player.BB || getplayeratpos(field +7)==Player.B || getplayeratpos(field +7)==Player.RB )) {
+                    if (!Arrays.asList(9, 17, 25, 33, 41, 49, 10).contains(field) && (getplayeratpos(field -9)==Player.BB || getplayeratpos(field -9)==Player.B || getplayeratpos(field -9)==Player.RB )) {
                         String cur = fieldToString(field);
-                        String to = fieldToString(field+7);
+                        String to = fieldToString(field-9);
                         res.add(cur + "-" + to);
                     }
 
                     //Diagonal nach rechts (von blau aus gesehen)
-                    if (!Arrays.asList(16, 24, 32, 40, 48, 56, 55).contains(field) && (getplayeratpos(field +9)==Player.BB || getplayeratpos(field +9)==Player.B || getplayeratpos(field +9)==Player.RB )) {
+                    if (!Arrays.asList(16, 24, 32, 40, 48, 56, 15).contains(field) && (getplayeratpos(field -7)==Player.BB || getplayeratpos(field -7)==Player.B || getplayeratpos(field -7)==Player.RB )) {
                         String cur = fieldToString(field);
-                        String to = fieldToString(field+9);
+                        String to = fieldToString(field-7);
                         res.add(cur + "-" + to);
                     }
                 }
@@ -160,26 +183,6 @@ public class Board {
         }
         return res;
     }
-
-/*
-    // plus ist true wenn spieler rot ist
-    ArrayList<String> knightValidFields(int col, int row, String[][] board, boolean plus) {
-        ArrayList<String> res = new ArrayList<>();
-        if (!plus) {
-            // blauer spieler
-            //2 Sprünge nach vorne
-            if (row - 2 >= 0) {
-                //Sprung nach 2 vorne 1 rechts
-                if (col + 1 <= 7 && !(col == 6 && row == 2) && !Objects.equals(board[row - 2][col + 1], "bb") && !Objects.equals(board[row - 2][col + 1], "rb")) {
-                    String cur = indextoboardfield(row, col);
-                    String to = indextoboardfield(row - 2, col + 1);
-                    res.add(cur + "-" + to);
-                }
-            }
-        }
-
-        return res;
-    } */
 }
 enum Player{
     R, B, RB, BR, RR, BB, EMPTY;
