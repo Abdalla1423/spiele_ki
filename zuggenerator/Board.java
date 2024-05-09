@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Board {
+    // blau unten rot oben
     boolean blauIstDran = false;
     long blauzweiteebene = 0;
     long rotzweiteebene = 0;
@@ -109,19 +110,19 @@ public class Board {
                 //blau einzel figur
                 if (this.blauIstDran && getplayeratpos(field)==Player.B) {
                     //zug nach vorne
-                    if ((field + 8) != 57 && (field + 8) != 64 && field<57 && getplayeratpos(field + 8) == Player.EMPTY) {
+                    if ((field + 8) != 57 && (field + 8) != 64 && field<57 && (getplayeratpos(field + 8) == Player.EMPTY || getplayeratpos(field + 8) == Player.B )) {
                         String cur = fieldToString(field);
                         String to = fieldToString(field+8);
                         res.add(cur + "-" + to);
                     }
                     //nach rechts
-                    if (!Arrays.asList(7, 16, 24, 32, 40, 48, 56, 63).contains(field) && getplayeratpos(field + 1) == Player.EMPTY) {
+                    if (!Arrays.asList(7, 16, 24, 32, 40, 48, 56, 63).contains(field) && (getplayeratpos(field + 8) == Player.EMPTY || getplayeratpos(field + 8) == Player.B )) {
                         String cur = fieldToString(field);
                         String to = fieldToString(field+1);
                         res.add(cur + "-" + to);
                     }
                     //nach links
-                    if (!Arrays.asList(2, 9, 17, 25, 33, 41, 49, 58).contains(field) && getplayeratpos(field - 1) == Player.EMPTY) {
+                    if (!Arrays.asList(2, 9, 17, 25, 33, 41, 49, 58).contains(field) && (getplayeratpos(field + 8) == Player.EMPTY || getplayeratpos(field + 8) == Player.B )) {
                         String cur = fieldToString(field);
                         String to = fieldToString(field-1);
                         res.add(cur + "-" + to);
@@ -145,19 +146,19 @@ public class Board {
                 //rot einzel figur
                 if (!this.blauIstDran && getplayeratpos(field)==Player.R) {
                     //zug nach vorne
-                    if ((field-8)>1 && (field-8)!=8 && getplayeratpos(field-8)==Player.EMPTY) {
+                    if ((field-8)>1 && (field-8)!=8 && (getplayeratpos(field + 8) == Player.EMPTY || getplayeratpos(field + 8) == Player.R )) {
                         String cur = fieldToString(field);
                         String to = fieldToString(field-8);
                         res.add(cur + "-" + to);
                     }
                     //nach rechts (von blau aus gesehen)
-                    if (!Arrays.asList(7, 16, 24, 32, 40, 48, 56, 63).contains(field) && getplayeratpos(field +1)==Player.EMPTY) {
+                    if (!Arrays.asList(7, 16, 24, 32, 40, 48, 56, 63).contains(field) && (getplayeratpos(field + 8) == Player.EMPTY || getplayeratpos(field + 8) == Player.R )) {
                         String cur = fieldToString(field);
                         String to = fieldToString(field+1);
                         res.add(cur + "-" + to);
                     }
                     //nach links (von blau aus gesehen)
-                    if (!Arrays.asList(2, 9, 17, 25, 33, 41, 49, 58).contains(field) && getplayeratpos(field -1)==Player.EMPTY) {
+                    if (!Arrays.asList(2, 9, 17, 25, 33, 41, 49, 58).contains(field) && (getplayeratpos(field + 8) == Player.EMPTY || getplayeratpos(field + 8) == Player.R )) {
                         String cur = fieldToString(field);
                         String to = fieldToString(field-1);
                         res.add(cur + "-" + to);
@@ -178,6 +179,9 @@ public class Board {
                     }
                 }
                 //blau doppellt
+                
+                
+
 
                 //rot doppellt
         }
