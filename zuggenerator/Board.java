@@ -277,56 +277,55 @@ public class Board {
     void updateBoard(String fromposition, String toposition) {
         int frompo = stringToField(fromposition);
         int topo = stringToField(toposition);
+
         Player frompos = getplayeratpos(frompo);
         Player topos = getplayeratpos(topo);
 
         if(frompos == Player.RR){
-            rotzweiteebene &= ~(frompo);
+            rotzweiteebene &= ~(1L << (frompo-1));
         }else if(frompos == Player.BB){
-            blauzweiteebene &= ~(frompo);
+            blauzweiteebene &= ~(1L << (frompo-1));
         }else if(frompos == Player.RB){
-            blauzweiteebene &= ~(frompo);
+            blauzweiteebene &= ~(1L << (frompo-1));
         }else if(frompos == Player.BR){
-            rotzweiteebene &= ~(frompo);
+            rotzweiteebene &= ~(1L << (frompo-1));
         }else if(frompos == Player.R){
-            rotersteebene &= ~(frompo);
+            rotersteebene &= ~(1L << (frompo-1));
         }else if(frompos == Player.B){
-            blauersteebene &= ~(frompo);
+            blauersteebene &= ~(1L << (frompo-1));
         }
 
         if(topos == Player.RR){
-            rotzweiteebene &= ~(topo);
-            blauzweiteebene |= topo;
+            rotzweiteebene &= ~(1L << (topo-1));
+            blauzweiteebene |= 1L << (topo-1);
         }else if(topos == Player.BB){
-            rotzweiteebene |= topo;
-            blauzweiteebene &= ~(topo);
+            rotzweiteebene |= 1L << (topo-1);
+            blauzweiteebene &= ~(1L << (topo-1));
         }else if(topos == Player.RB){
-            rotzweiteebene |= topo;
-            blauzweiteebene &= ~(topo);
+            rotzweiteebene |= 1L << (topo-1);
+            blauzweiteebene &= ~(1L << (topo-1));
         }else if(topos == Player.BR){
-            rotzweiteebene &= ~(topo);
-            blauzweiteebene |= topo;
-
+            rotzweiteebene &= ~(1L << (topo-1));
+            blauzweiteebene |= 1L << (topo-1);
         }else if(topos == Player.R){
             if(frompos == Player.RR || frompos == Player.R || frompos == Player.BR){
-                rotzweiteebene |= topo;
+                rotzweiteebene |= 1L << (topo-1);
             }else if(frompos == Player.RB || frompos == Player.BB){
-                blauzweiteebene |= topo;
+                blauzweiteebene |= 1L << (topo-1);
             }
             else{
-                rotersteebene &= ~(topo);
-                blauersteebene |= topo;
+                rotersteebene &= ~(1L << (topo-1));
+                blauersteebene |= 1L << (topo-1);
             }
-
         }else if(topos == Player.B){
             if(frompos == Player.BB || frompos == Player.B || frompos == Player.RB){
-                blauzweiteebene |= topo;
+                blauzweiteebene |= 1L << (topo-1);
             }else if(frompos == Player.BR || frompos == Player.RR){
-                rotzweiteebene |= topo;
+                rotzweiteebene |= 1L << (topo-1);
             }
             else{
-                blauersteebene &= ~(topo);
-                rotersteebene |= topo;
+                blauersteebene &= ~(1L << (topo-1));
+                rotersteebene |= 1L << (topo-1);
             }
         }
 
