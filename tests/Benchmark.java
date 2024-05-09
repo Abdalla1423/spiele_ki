@@ -1,5 +1,7 @@
 package tests;
 
+import java.util.concurrent.TimeUnit;
+
 public class Benchmark {
 
     public long benchmarkOne() { // Early Game
@@ -11,7 +13,7 @@ public class Benchmark {
         }
         long endTime = System.nanoTime();
 
-        return (endTime - startTime);
+        return TimeUnit.NANOSECONDS.toMillis(endTime - startTime);
     }
 
     public long benchmarkTwo() { // Mid Game
@@ -23,7 +25,7 @@ public class Benchmark {
         }
         long endTime = System.nanoTime();
 
-        return (endTime - startTime);
+        return TimeUnit.NANOSECONDS.toMillis(endTime - startTime);
     }
 
     public long benchmarkThree() { // End Game
@@ -35,13 +37,37 @@ public class Benchmark {
         }
         long endTime = System.nanoTime();
 
-        return (endTime - startTime);
+        return TimeUnit.NANOSECONDS.toMillis(endTime - startTime);
     }
 
     public static void main(String[] args) {
         Benchmark b = new Benchmark();
-        System.out.println(b.benchmarkOne());
-        System.out.println(b.benchmarkTwo());
-        System.out.println(b.benchmarkThree());
+
+        long benchOne = 0;
+        for (int i = 0; i < 10; i++) {
+            benchOne = benchOne + b.benchmarkOne();
+        }
+        System.out.println("Benchmark Early Game");
+        System.out.println("10000 iterations in milliseconds: " + benchOne);
+        System.out.println("Average time in milliseconds " + (float) benchOne / 10000);
+        System.out.println(" ");
+
+        long benchTwo = 0;
+        for (int i = 0; i < 10; i++) {
+            benchTwo = benchTwo + b.benchmarkTwo();
+        }
+        System.out.println("Benchmark Mid Game");
+        System.out.println("10000 iterations in milliseconds: " + benchTwo);
+        System.out.println("Average time in milliseconds " + (float) benchTwo / 10000);
+        System.out.println(" ");
+
+        long benchThree = 0;
+        for (int i = 0; i < 10; i++) {
+            benchThree = benchThree + b.benchmarkThree();
+        }
+        System.out.println("Benchmark Late Game");
+        System.out.println("10000 iterations in milliseconds: " + benchThree);
+        System.out.println("Average time in milliseconds " + (float) benchThree / 10000);
+        System.out.println(" ");
     }
  }
