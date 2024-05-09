@@ -1,5 +1,7 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Board {
     // blau unten rot oben
@@ -245,6 +247,12 @@ public class Board {
                     res.addAll(getPossibleKnightMoves(true, field));
                 }
         }
+
+        // Duplikate entfernen
+        Set<String> set = new HashSet<>(res);
+        res.clear();
+        res.addAll(set);
+        
         return res;
     }
 }
