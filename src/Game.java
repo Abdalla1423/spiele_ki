@@ -23,60 +23,64 @@ public class Game {
     private static boolean useAlphaBeta = true; // Change this to switch between algorithms
 
 
-    public static int iterativeDeepening(Board startBoard, int maxDepth, boolean useAlphaBeta) {
-        int bestValue = 0;
+    public static MoveEvaluation iterativeDeepening(Board startBoard, int maxDepth, boolean useAlphaBeta) {
+        MoveEvaluation bestMoveEvaluation = new MoveEvaluation(0, "");
         for (int depth = 1; depth <= maxDepth; depth++) {
-            bestValue = minimaxAlphaBeta(startBoard, depth, Integer.MIN_VALUE, Integer.MAX_VALUE, true, useAlphaBeta, "");
+            bestMoveEvaluation = minimaxAlphaBeta(startBoard, depth, Integer.MIN_VALUE, Integer.MAX_VALUE, true, useAlphaBeta, "");
         }
-        return bestValue;
+        return bestMoveEvaluation;
     }
 
-    public static int minimaxAlphaBeta(Board board, int depth, int alpha, int beta, boolean maximizingPlayer, boolean useAlphaBeta, String lastMove) {
+    public static MoveEvaluation minimaxAlphaBeta(Board board, int depth, int alpha, int beta, boolean maximizingPlayer, boolean useAlphaBeta, String lastMove) {
         if (depth == 0 || thisPlayerHasWon(board) != Player.EMPTY) {
-            return board.evaluate();
+            return new MoveEvaluation(board.evaluate(), lastMove);
         }
 
-        ArrayList <String> allPossibleMoves = Move.possiblemoves(board);
+        ArrayList<String> allPossibleMoves = Move.possiblemoves(board);
+        MoveEvaluation bestMove = new MoveEvaluation(maximizingPlayer ? Integer.MIN_VALUE : Integer.MAX_VALUE, "");
 
-        if (maximizingPlayer) {
-            int maxEval = Integer.MIN_VALUE;
-            for (String move : allPossibleMoves) {
-                Board nextBoard = new Board(board.blauzweiteebene, board.rotzweiteebene, board.blauersteebene, board.rotersteebene);
-                String[] curr = move.split("-");
-                board.updateBoard(curr[0], curr[1]);
-                int eval = minimaxAlphaBeta(nextBoard, depth - 1, alpha, beta, false, useAlphaBeta, move);
-                maxEval = Math.max(maxEval, eval);
-                if (useAlphaBeta) {
-                    alpha = Math.max(alpha, eval);
-                    if (beta <= alpha) {
-                        break; // Beta cut-off
-                    }
+        for (String move : allPossibleMoves) {
+            Board nextBoard = new Board(board.blauzweiteebene, board.rotzweiteebene, board.blauersteebene, board.rotersteebene);
+            String[] curr = move.split("-");
+            nextBoard.updateBoard(curr[0], curr[1]);
+            nextBoard.blauIstDran = !board.blauIstDran;
+            MoveEvaluation eval = minimaxAlphaBeta(nextBoard, depth - 1, alpha, beta, !maximizingPlayer, useAlphaBeta, move);
+
+            if (maximizingPlayer) {
+                if (eval.evaluation > bestMove.evaluation) {
+                    bestMove.evaluation = eval.evaluation;
+                    bestMove.move = move;
                 }
-            }
-            return maxEval;
-        } else {
-            int minEval = Integer.MAX_VALUE;
-            for (String move : allPossibleMoves) {
-                Board nextBoard = new Board(board.blauzweiteebene, board.rotzweiteebene, board.blauersteebene, board.rotersteebene);
-                String[] curr = move.split("-");
-                board.updateBoard(curr[0], curr[1]);
-                int eval = minimaxAlphaBeta(nextBoard, depth - 1, alpha, beta, true, useAlphaBeta, move);
-                minEval = Math.min(minEval, eval);
-                if (useAlphaBeta) {
-                    beta = Math.min(beta, eval);
-                    if (beta <= alpha) {
-                        break; // Alpha cut-off
-                    }
+                alpha = Math.max(alpha, eval.evaluation);
+            } else {
+                if (eval.evaluation < bestMove.evaluation) {
+                    bestMove.evaluation = eval.evaluation;
+                    bestMove.move = move;
                 }
+                beta = Math.min(beta, eval.evaluation);
             }
-            return minEval;
+
+            if (useAlphaBeta && beta <= alpha) {
+                break; // Alpha-beta cut-off
+            }
         }
+
+        return bestMove;
     }
-
     public static void main(String[] args) {
         Board startBoard = new Board("b0b0b0b0b0b0/1b0b0b0b0b0b01/8/8/8/8/1r0r0r0r0r0r01/r0r0r0r0r0r0 b");
         int maxDepth = 3;
-        int bestValue = iterativeDeepening(startBoard, maxDepth, useAlphaBeta);
-        System.out.println("Best value: " + bestValue);
+        MoveEvaluation bestMoveEvaluation = iterativeDeepening(startBoard, maxDepth, useAlphaBeta);
+        System.out.println("Best move: " + bestMoveEvaluation.move + " with value: " + bestMoveEvaluation.evaluation);
+    }
+}
+
+class MoveEvaluation {
+    int evaluation;
+    String move;
+
+    MoveEvaluation(int evaluation, String move) {
+        this.evaluation = evaluation;
+        this.move = move;
     }
 }
