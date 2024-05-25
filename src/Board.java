@@ -16,7 +16,7 @@ public class Board {
         this.blauersteebene = blauersteebene;
         this.rotersteebene = rotersteebene;
     }
-    
+
     void constructBitBoard(String fen) {
         long number = 2;
         int row = 1;
@@ -118,64 +118,171 @@ public class Board {
         Player frompos = getplayeratpos(frompo);
         Player topos = getplayeratpos(topo);
 
-        if(frompos == Player.RR){
-            rotzweiteebene &= ~(1L << (frompo-1));
-        }else if(frompos == Player.BB){
-            blauzweiteebene &= ~(1L << (frompo-1));
-        }else if(frompos == Player.RB){
-            blauzweiteebene &= ~(1L << (frompo-1));
-        }else if(frompos == Player.BR){
-            rotzweiteebene &= ~(1L << (frompo-1));
-        }else if(frompos == Player.R){
-            rotersteebene &= ~(1L << (frompo-1));
-        }else if(frompos == Player.B){
-            blauersteebene &= ~(1L << (frompo-1));
+        switch (frompos) {
+            case Player.RR, Player.BR -> rotzweiteebene &= ~(1L << (frompo-1));
+            case Player.BB, Player.RB -> blauzweiteebene &= ~(1L << (frompo-1));
+            case Player.R -> rotersteebene &= ~(1L << (frompo-1));
+            case Player.B -> blauersteebene &= ~(1L << (frompo-1));
         }
 
-        if(topos == Player.RR){
-            rotzweiteebene &= ~(1L << (topo-1));
-            blauzweiteebene |= 1L << (topo-1);
-        }else if(topos == Player.BB){
-            rotzweiteebene |= 1L << (topo-1);
-            blauzweiteebene &= ~(1L << (topo-1));
-        }else if(topos == Player.RB){
-            rotzweiteebene |= 1L << (topo-1);
-            blauzweiteebene &= ~(1L << (topo-1));
-        }else if(topos == Player.BR){
-            rotzweiteebene &= ~(1L << (topo-1));
-            blauzweiteebene |= 1L << (topo-1);
-        }else if(topos == Player.R){
-            if(frompos == Player.RR || frompos == Player.R || frompos == Player.BR){
-                rotzweiteebene |= 1L << (topo-1);
-            }else if(frompos == Player.RB || frompos == Player.BB){
+        switch (topos) {
+            case Player.RR, Player.BR -> {
+                rotzweiteebene &= ~(1L << (topo-1));
                 blauzweiteebene |= 1L << (topo-1);
             }
-            else{
-                rotersteebene &= ~(1L << (topo-1));
-                blauersteebene |= 1L << (topo-1);
-            }
-        }else if(topos == Player.B){
-            if(frompos == Player.BB || frompos == Player.B || frompos == Player.RB){
-                blauzweiteebene |= 1L << (topo-1);
-            }else if(frompos == Player.BR || frompos == Player.RR){
+            case Player.BB, Player.RB -> {
                 rotzweiteebene |= 1L << (topo-1);
+                blauzweiteebene &= ~(1L << (topo-1));
             }
-            else{
-                blauersteebene &= ~(1L << (topo-1));
-                rotersteebene |= 1L << (topo-1);
+            case Player.R -> {
+                switch (frompos) {
+                    case Player.BB, Player.RB -> blauzweiteebene |= 1L << (topo-1);
+                    case Player.RR, Player.R, Player.BR -> rotzweiteebene |= 1L << (topo-1);
+                    default -> {
+                        rotersteebene &= ~(1L << (topo-1));
+                        blauersteebene |= 1L << (topo-1);
+                    }
+                }
             }
-
-        } else if (topos == Player.EMPTY) {
-            if(frompos == Player.BB || frompos == Player.B || frompos == Player.RB){
-                blauersteebene |= 1L << (topo-1);
-            }else if(frompos == Player.BR || frompos == Player.RR || frompos == Player.R){
-                rotersteebene |= 1L << (topo-1);
+            case Player.B -> {
+                switch (frompos) {
+                    case Player.BB, Player.B, Player.RB -> blauzweiteebene |= 1L << (topo-1);
+                    case Player.RR, Player.BR -> rotzweiteebene |= 1L << (topo-1);
+                    default -> {
+                        blauersteebene &= ~(1L << (topo-1));
+                        rotersteebene |= 1L << (topo-1);
+                    }
+                }
             }
-            else{
-                blauersteebene &= ~(1L << (topo-1));
-                rotersteebene |= 1L << (topo-1);
+            case Player.EMPTY -> {
+                switch (frompos) {
+                    case Player.BB, Player.B, Player.RB -> blauersteebene |= 1L << (topo-1);
+                    case Player.RR, Player.R, Player.BR -> rotersteebene |= 1L << (topo-1);
+                    default -> {
+                        blauersteebene &= ~(1L << (topo-1));
+                        rotersteebene |= 1L << (topo-1);
+                    }
+                }
             }
         }
+    }
+
+    int evaluate() {
+        int result=0;
+
+        for (int i = 8; i > 0; i--) {
+            for (int field = 8 * i - 7; field < i * 8; field++) {
+                if (Player.B == getplayeratpos(field))  {
+                    result = i;
+                }
+            }
+        }
+
+/*
+        for (int i = 1; i < 9; i++) {
+            for (int field = 8*i-7; field < i*8; field++) {
+                switch (getplayeratpos(field)) {
+                    case Player.B -> result+=9+i;
+                    case Player.R -> result-=18-i;
+                    case Player.BB -> result+=2*(9+i)+1;
+                    case Player.RR -> result-=2*(18-i)+1;
+                    case Player.RB -> result+=(9+i)+1;
+                    case Player.BR -> result-=(18-i)+1;
+                }
+            }
+        } */
+
+
+        /*
+
+        //Reihe 1
+        for (int field=2; field<8; field++) {
+           switch (getplayeratpos(field)) {
+               case Player.B -> result+=10;
+               case Player.R, Player.BR, Player.RR -> result = -10000;
+               case Player.BB -> result+=22;
+               case Player.RB -> result+=11;
+           }
+        }
+        //Reihe 2 (blau + 1 zu reihe davor)
+        for (int field=9; field<16; field++) {
+            switch (getplayeratpos(field)) {
+                case Player.B -> result+=11;
+                case Player.R -> result-=25;
+                case Player.BB -> result+=24;
+                case Player.RR, Player.BR -> result-=60;
+                case Player.RB -> result+=12;
+            }
+        }
+        //Reihe 3 (blau+1 im vergleich zu reihe davor)
+        for (int field=17; field<24; field++) {
+            switch (getplayeratpos(field)) {
+                case Player.B -> result+=13;
+                case Player.R -> result-=16;
+                case Player.BB -> result+=26;
+                case Player.RR, Player.BR -> result-=50;
+                case Player.RB -> result+=13;
+            }
+        }
+        //Reihe 4 (blau + 1 zu reihe davor)
+        for (int field=25; field<32; field++) {
+            switch (getplayeratpos(field)) {
+                case Player.B -> result+=16;
+                case Player.R -> result-=15;
+                case Player.BB -> result+=28;
+                case Player.RR -> result-=32;
+                case Player.RB -> result+=16;
+                case Player.BR -> result-=16;
+            }
+        }
+        //Reihe 5 (blau+2 im vergleich zu reihe davor)
+        for (int field=33; field<40; field++) {
+            switch (getplayeratpos(field)) {
+                case Player.B -> result+=15;
+                case Player.R -> result-=13;
+                case Player.BB -> result+=32;
+                case Player.RR -> result-=28;
+                case Player.RB -> result+=16;
+                case Player.BR -> result-=14;
+            }
+        }
+        //Reihe 6 (blau+1 im vergleich zu reihe davor)
+        for (int field=41; field<48; field++) {
+            switch (getplayeratpos(field)) {
+                case Player.B -> result+=16;
+                case Player.R -> result-=12;
+                case Player.BB -> result+=50; //gewinnt das spiel im nächsten zug
+                case Player.RR -> result-=26;
+                case Player.RB -> result+=50; //gewinnt das spiel im nächsten zug
+                case Player.BR -> result-=13;
+            }
+        }
+        //Reihe 7 (blau+11 im vergleich zu reihe davor)
+        for (int field=49; field<56; field++) {
+            switch (getplayeratpos(field)) {
+                case Player.B -> result+=25;
+                case Player.BB -> result+=60; //gewinnt das spiel im nächsten zug
+                case Player.R -> result-=11;
+                case Player.RR -> result-=24;
+                case Player.RB -> result+=60; //gewinnt das spiel im nächsten zug
+                case Player.BR -> result-=12;
+            }
+        }
+        //Reihe 8
+        for (int field=57; field<63; field++) {
+            switch (getplayeratpos(field)) {
+                case Player.B -> result=10000;
+                case Player.BB -> result=10000;
+                case Player.R -> result-=10;
+                case Player.RR -> result-=22;
+                case Player.RB -> result=10000;
+                case Player.BR -> result-=11;
+            }
+        }
+
+         */
+
+        return result;
     }
 
     String boardToFEN() {
@@ -222,5 +329,4 @@ public class Board {
     }
 
 }
-
 
