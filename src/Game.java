@@ -3,6 +3,7 @@ import java.util.ArrayList;
 public class Game {
     //gibt Player R zurück, wenn rot gewonnen hat; Player B zurück, wenn blau gewonnen hat; Player EMPTY zurück, wenn noch
     // niemand gewonnen hat
+    // TODO: Player also wins if other one has no moves or players left (same as no moves)
     public static Player thisPlayerHasWon (Board board) {
         //gucken, ob rot gewonnen hat
         for (int field=1; field<8; field++) {

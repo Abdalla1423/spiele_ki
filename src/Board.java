@@ -194,16 +194,20 @@ public class Board {
 
         // verlieren -10, verlieren -11, gewinnen -23 --> -2
         //  verlieren -15, verliern -16, gewinnen -33 --> -2
+        // --> test 1
+        // variable = (condition) ? expressionTrue :  expressionFalse;
+        //
         for (int i = 1; i < 9; i++) {
             for (int field = 8*i-7; field < i*8; field++) {
                 int factor = (int) Math.pow(i, 2);
+                //int factor = i;
                 switch (getplayeratpos(field)) {
-                    case B -> result+=9+factor;
-                    case R -> result-=18-factor;
-                    case BB -> result+=2*(9+factor)+1;
-                    case RR -> result-=2*(18-factor)+1;
-                    case RB -> result+=(9+factor)+1;
-                    case BR -> result-=(18-factor)+1;
+                    case B -> result+= field < 58 ? (9 + i) * i: 10000;
+                    case R -> result-= field > 8 ? (18-i) * (9 - i) : 10000;
+                    case BB -> result+=field < 58 ? (2*(9+i)+1) * i: 20001;
+                    case RR -> result-=field > 8 ? (2*(18-i)+1) * (9 - i) : 20001;
+                    case RB -> result+=field < 58 ? ((9+i)+1) * i: 10001;
+                    case BR -> result-=field > 8 ? ((18-i)+1) * (9 - i) : 10001;
                 }
             }
         }

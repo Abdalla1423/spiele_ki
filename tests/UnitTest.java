@@ -105,12 +105,12 @@ class AlphaBetaTest {
     public void testAlphaBetaOne() { // Gruppe G 1
         Board b = new Board("b02b01b0/4r03/1b02r03/1bb6/8/4r0b02/1r03r02/r01r02r0 r");
         String expectedResult = "E3-E2";
-        MoveEvaluation actualResult = Game.iterativeDeepening(b, 3, true);
+        MoveEvaluation actualResult = Game.iterativeDeepening(b, 1, true);
         Assertions.assertEquals(expectedResult, actualResult.move);
 
     }
 
-    /*
+
     @Test
     public void testAlphaBetaOnePtFive() { // Gruppe G 2
         Board b = new Board("b02b01b0/2b03b01/2r0b04/8/6rr1/3b02r01/3b04/r01r02r0 b");
@@ -119,7 +119,7 @@ class AlphaBetaTest {
         Assertions.assertEquals(expectedResult, actualResult.move);
     }
 
-     */
+
 
     @Test
     public void testAlphaBetaTwo() { // Gruppe G 2
@@ -161,7 +161,7 @@ class AlphaBetaTest {
     public void testAlphaBetaSix() { // Gruppe S 2
         Board b = new Board("2b03/1b0b05/6b01/3b02r01/1b01r02r01/2b05/2r03r01/3r02 b");
         String expectedResult = "B5-C5";
-        MoveEvaluation actualResult = Game.iterativeDeepening(b, 3, true);
+        MoveEvaluation actualResult = Game.iterativeDeepening(b, 5, true);
         Assertions.assertEquals(expectedResult, actualResult.move);
 
     }
@@ -175,7 +175,7 @@ class AlphaBetaTest {
 
     }
 
-    /*
+
     @Test
     public void testAlphaBetaSevenPtFive() { // Gruppe J 1
         Board b = new Board("1b01b02/1bb6/2b0bb2b01/2b02b02/2r0r01r02/4r02b0/1r0r0rrr01rr1/6 b");
@@ -185,13 +185,13 @@ class AlphaBetaTest {
 
     }
 
-     */
+
 
     @Test
     public void testAlphaBetaEight() { // Gruppe J 2
         Board b = new Board("3b02/1bb6/1r0b02r02/2r05/4r03/8/2r03r01/6 r");
         String expectedResult = "B3-A3";
-        MoveEvaluation actualResult = Game.iterativeDeepening(b, 3, true);
+        MoveEvaluation actualResult = Game.iterativeDeepening(b, 5, true);
         Assertions.assertEquals(expectedResult, actualResult.move);
 
     }
