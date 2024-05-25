@@ -1,190 +1,150 @@
-
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Move {
+    static Set<Integer> edgesRight = Set.of(7, 16, 24, 32, 40, 48, 56, 63);
+    static Set<Integer> edgesLeft = Set.of(2, 9, 17, 25, 33, 41, 49, 58);
+    static Set<Integer> blueDoubleMovesRight = Set.of(7, 15, 16, 23, 24, 31, 32, 39, 40, 47, 48, 54, 55, 56);
+    static Set<Integer> blueDoubleMovesRightUp = Set.of(16, 24, 32, 40, 47, 48, 56);
+    static Set<Integer> blueDoubleMovesLeft = Set.of(2, 9, 10, 17, 18, 25, 26, 33, 34, 41, 42, 49, 50, 51);
+    static Set<Integer> blueDoubleMovesLeftUp = Set.of(9, 17, 25, 33, 41, 49, 42);
+    static Set<Integer> redDoubleMovesRight = Set.of(14, 15, 16, 23, 24, 31, 32, 39, 40, 47, 48, 55, 56, 63);
+    static Set<Integer> redDoubleMovesRightInner = Set.of(9, 10, 11, 12, 13, 14, 15, 16, 23, 24, 32, 40, 48, 56);
+    static Set<Integer> redDoubleMovesLeft = Set.of(9, 10, 11, 17, 18, 25, 26, 33, 34, 41, 42, 49, 50, 58);
+    static Set<Integer> redDoubleMovesLeftInner = Set.of(9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 25, 33, 41, 49);
+
 
     public static String pickMove(ArrayList<String> allMoves) {
         int newMove = ThreadLocalRandom.current().nextInt(0, allMoves.size());
         return allMoves.get(newMove);
     }
 
-    public static ArrayList<String> possiblemoves(Board board) {
-        ArrayList<String> res = new ArrayList<>();
+    public static String pickRandomMove(ArrayList<String> allMoves) {
+        int newMove = ThreadLocalRandom.current().nextInt(0, allMoves.size());
+        return allMoves.get(newMove);
+    }
+    public static ArrayList<int[]> possibleMoves(Board board) {
+        ArrayList<int[]> res = new ArrayList<>();
         for (int field = 1; field < 64; field++) {
-            //blau einzel figur
-            if (board.blauIstDran && board.getplayeratpos(field)==Player.B) {
-                //zug nach vorne
-                if ((field + 8) != 57 && (field + 8) != 64 && field<57 && (board.getplayeratpos(field + 8) == Player.EMPTY || board.getplayeratpos(field + 8) == Player.B )) {
-                    String cur = Board.fieldToString(field);
-                    String to = Board.fieldToString(field+8);
-                    res.add(cur + "-" + to);
-                }
-                //nach rechts
-                if (!Arrays.asList(7, 16, 24, 32, 40, 48, 56, 63).contains(field) && (board.getplayeratpos(field + 1) == Player.EMPTY || board.getplayeratpos(field + 1) == Player.B )) {
-                    String cur = Board.fieldToString(field);
-                    String to = Board.fieldToString(field+1);
-                    res.add(cur + "-" + to);
-                }
-                //nach links
-                if (!Arrays.asList(2, 9, 17, 25, 33, 41, 49, 58).contains(field) && (board.getplayeratpos(field - 1) == Player.EMPTY || board.getplayeratpos(field - 1) == Player.B )) {
-                    String cur = Board.fieldToString(field);
-                    String to = Board.fieldToString(field-1);
-                    res.add(cur + "-" + to);
+            Player getPlayerAtPos = board.getplayeratpos(field);
+
+            if (board.blauIstDran) {
+                //blau einzel figur
+                if (getPlayerAtPos == Player.B) {
+                    //zug nach vorne
+                    if (field + 8 != 57 && field + 8 != 64 && field < 57 && (board.getplayeratpos(field + 8) == Player.EMPTY || board.getplayeratpos(field + 8) == Player.B )) {
+                        res.add(new int[] {field, field + 8});
+                    }
+                    //nach rechts
+                    if (!edgesRight.contains(field) && (board.getplayeratpos(field + 1) == Player.EMPTY || board.getplayeratpos(field + 1) == Player.B )) {
+                        res.add(new int[] {field, field + 1});
+                    }
+                    //nach links
+                    if (!edgesLeft.contains(field) && (board.getplayeratpos(field - 1) == Player.EMPTY || board.getplayeratpos(field - 1) == Player.B )) {
+                        res.add(new int[] {field, field - 1});
+                    }
+
+                    //Diagonal nach links
+                    if (field < 57 && field % 8 != 1 && (board.getplayeratpos(field +7) == Player.RR || board.getplayeratpos(field +7) == Player.R || board.getplayeratpos(field +7) == Player.BR)) {
+                        res.add(new int[] {field, field + 7});
+                    }
+
+                    //Diagonal nach rechts
+                    if (field < 56 && field % 8 != 0 && (board.getplayeratpos(field +9) == Player.RR || board.getplayeratpos(field +9) == Player.R || board.getplayeratpos(field +9) == Player.BR)) {
+                        res.add(new int[] {field, field + 9});
+                    }
                 }
 
-                //Diagonal nach links
-                if (!Arrays.asList(9, 10, 17, 25, 33, 41, 49, 50).contains(field) && (board.getplayeratpos(field +7) == Player.RR || board.getplayeratpos(field +7) == Player.R || board.getplayeratpos(field +7) == Player.BR)) {
-                    String cur = Board.fieldToString(field);
-                    String to = Board.fieldToString(field+7);
-                    res.add(cur + "-" + to);
-                }
-
-                //Diagonal nach rechts
-                if (!Arrays.asList(16, 24, 32, 40, 48, 56, 55).contains(field) && (board.getplayeratpos(field +9) == Player.RR || board.getplayeratpos(field +9) == Player.R || board.getplayeratpos(field +9) == Player.BR)) {
-                    String cur = Board.fieldToString(field);
-                    String to = Board.fieldToString(field+9);
-                    res.add(cur + "-" + to);
+                //blau doppelt
+                else if (getPlayerAtPos == Player.BB || getPlayerAtPos == Player.RB) {
+                    // 2 nach rechts 1 nach oben
+                    if (!blueDoubleMovesRight.contains(field) && board.getplayeratpos(field+10)!=Player.BB) {
+                        res.add(new int[] {field, field + 10});
+                    }
+                    // 1 nach rechts 2 nach oben
+                    if (!blueDoubleMovesRightUp.contains(field) && field<49 && board.getplayeratpos(field+17)!=Player.BB) {
+                        res.add(new int[] {field, field + 17});
+                    }
+                    // 2 nach links 1 nach oben
+                    if (!blueDoubleMovesLeft.contains(field) && board.getplayeratpos(field+6)!=Player.BB) {
+                        res.add(new int[] {field, field + 6});
+                    }
+                    // 1 nach links 2 nach oben
+                    if (!blueDoubleMovesLeftUp.contains(field) && field<49 && board.getplayeratpos(field+15)!=Player.BB) {
+                        res.add(new int[] {field, field + 15});
+                    }
                 }
             }
 
-            //blau doppelt
-            if (board.blauIstDran && (board.getplayeratpos(field)==Player.BB || board.getplayeratpos(field)==Player.RB)) {
-                // 2 nach rechts 1 nach oben
-                if (!Arrays.asList(7, 15, 16, 23, 24, 31, 32, 39, 40, 47, 48, 54, 55, 56).contains(field) && board.getplayeratpos(field+10)!=Player.BB) {
-                    String cur = Board.fieldToString(field);
-                    String to = Board.fieldToString(field+10);
-                    res.add(cur + "-" + to);
-                }
-                // 1 nach rechts 2 nach oben
-                if (!Arrays.asList(16, 24, 32, 40, 47, 48, 56).contains(field) && field<49 && board.getplayeratpos(field+17)!=Player.BB) {
-                    String cur = Board.fieldToString(field);
-                    String to = Board.fieldToString(field+17);
-                    res.add(cur + "-" + to);
-                }
-                // 2 nach links 1 nach oben
-                if (!Arrays.asList(2, 9, 10, 17, 18, 25, 26, 33, 34, 41, 42, 49, 50, 51).contains(field) && board.getplayeratpos(field+6)!=Player.BB) {
-                    String cur = Board.fieldToString(field);
-                    String to = Board.fieldToString(field+6);
-                    res.add(cur + "-" + to);
-                }
-                // 1 nach links 2 nach oben
-                if (!Arrays.asList(9, 17, 25, 33, 41, 49, 42).contains(field) && field<49 && board.getplayeratpos(field+15)!=Player.BB) {
-                    String cur = Board.fieldToString(field);
-                    String to = Board.fieldToString(field+15);
-                    res.add(cur + "-" + to);
-                }
-            }
+            else {
+                //rot einzel figur
+                if (getPlayerAtPos == Player.R) {
+                    //zug nach vorne
+                    if (field > 8 && (board.getplayeratpos(field - 8) == Player.EMPTY || board.getplayeratpos(field - 8) == Player.R )) {
+                        res.add(new int[] {field, field - 8});
+                    }
+                    //nach rechts (von blau aus gesehen)
+                    if (!edgesRight.contains(field) && (board.getplayeratpos(field + 1) == Player.EMPTY || board.getplayeratpos(field + 1) == Player.R )) {
+                        res.add(new int[] {field, field + 1});
+                    }
+                    //nach links (von blau aus gesehen)
+                    if (!edgesLeft.contains(field) && (board.getplayeratpos(field - 1) == Player.EMPTY || board.getplayeratpos(field - 1) == Player.R )) {
+                        res.add(new int[] {field, field - 1});
+                    }
 
-            //rot einzel figur
-            if (!board.blauIstDran && board.getplayeratpos(field)==Player.R) {
-                //zug nach vorne
-                if ((field-8)>1 && (field-8)!=8 && (board.getplayeratpos(field - 8) == Player.EMPTY || board.getplayeratpos(field - 8) == Player.R )) {
-                    String cur = Board.fieldToString(field);
-                    String to = Board.fieldToString(field-8);
-                    res.add(cur + "-" + to);
-                }
-                //nach rechts (von blau aus gesehen)
-                if (!Arrays.asList(7, 16, 24, 32, 40, 48, 56, 63).contains(field) && (board.getplayeratpos(field + 1) == Player.EMPTY || board.getplayeratpos(field + 1) == Player.R )) {
-                    String cur = Board.fieldToString(field);
-                    String to = Board.fieldToString(field+1);
-                    res.add(cur + "-" + to);
-                }
-                //nach links (von blau aus gesehen)
-                if (!Arrays.asList(2, 9, 17, 25, 33, 41, 49, 58).contains(field) && (board.getplayeratpos(field - 1) == Player.EMPTY || board.getplayeratpos(field - 1) == Player.R )) {
-                    String cur = Board.fieldToString(field);
-                    String to = Board.fieldToString(field-1);
-                    res.add(cur + "-" + to);
+                    //Diagonal nach links (von blau aus gesehen)
+                    if (field > 9 && field % 8 != 1 && (board.getplayeratpos(field - 9)==Player.BB || board.getplayeratpos(field - 9)==Player.B || board.getplayeratpos(field - 9)==Player.RB )) {
+                        res.add(new int[] {field, field - 9});
+                    }
+
+                    //Diagonal nach rechts (von blau aus gesehen)
+                    if (field > 8 && field % 8 != 0 && (board.getplayeratpos(field - 7)==Player.BB || board.getplayeratpos(field - 7)==Player.B || board.getplayeratpos(field - 7)==Player.RB )) {
+                        res.add(new int[] {field, field - 7});
+                    }
                 }
 
-                //Diagonal nach links (von blau aus gesehen)
-                if (!Arrays.asList(9, 17, 25, 33, 41, 49, 10).contains(field) && (board.getplayeratpos(field - 9)==Player.BB || board.getplayeratpos(field - 9)==Player.B || board.getplayeratpos(field - 9)==Player.RB )) {
-                    String cur = Board.fieldToString(field);
-                    String to = Board.fieldToString(field-9);
-                    res.add(cur + "-" + to);
-                }
+                // rot doppelt
+                else if (getPlayerAtPos == Player.RR || getPlayerAtPos == Player.BR) {
+                    //Links außen (von Blau gesehen)
+                    if (!redDoubleMovesLeft.contains(field) && (board.getplayeratpos(field - 10)!=Player.RR)) {
+                        res.add(new int[] {field, field - 10});
+                    }
 
-                //Diagonal nach rechts (von blau aus gesehen)
-                if (!Arrays.asList(16, 24, 32, 40, 48, 56, 15).contains(field) && (board.getplayeratpos(field - 7)==Player.BB || board.getplayeratpos(field - 7)==Player.B || board.getplayeratpos(field - 7)==Player.RB )) {
-                    String cur = Board.fieldToString(field);
-                    String to = Board.fieldToString(field-7);
-                    res.add(cur + "-" + to);
-                }
-            }
+                    //Links innen (von Blau gesehen)
+                    if (!redDoubleMovesLeftInner.contains(field) && (board.getplayeratpos(field - 17)!=Player.RR)) {
+                        res.add(new int[] {field, field - 17});
+                    }
 
-            // rot doppelt
-            if (!board.blauIstDran && board.getplayeratpos(field)==Player.RR || board.getplayeratpos(field)==Player.BR) {
-                //Links außen (von Blau gesehen)
-                if (!Arrays.asList(9, 10, 11, 17, 18, 25, 26, 33, 34, 41, 42, 49, 50, 58).contains(field) && (board.getplayeratpos(field - 10)!=Player.RR)) {
-                    String cur = Board.fieldToString(field);
-                    String to = Board.fieldToString(field-10);
-                    res.add(cur + "-" + to);
-                }
+                    //Rechts außen (von Blau gesehen)
+                    if (!redDoubleMovesRight.contains(field) && (board.getplayeratpos(field - 6)!=Player.RR)) {
+                        res.add(new int[] {field, field - 6});
+                    }
 
-                //Links innen (von Blau gesehen)
-                if (!Arrays.asList(9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 25, 33, 41, 49).contains(field) && (board.getplayeratpos(field - 17)!=Player.RR)) {
-                    String cur = Board.fieldToString(field);
-                    String to = Board.fieldToString(field-17);
-                    res.add(cur + "-" + to);
-                }
-
-                //Rechts außen (von Blau gesehen)
-                if (!Arrays.asList(14, 15, 16, 23, 24, 31, 32, 39, 40, 47, 48, 55, 56, 63).contains(field) && (board.getplayeratpos(field - 6)!=Player.RR)) {
-                    String cur = Board.fieldToString(field);
-                    String to = Board.fieldToString(field-6);
-                    res.add(cur + "-" + to);
-                }
-
-                //Rechts innen (von Blau gesehen)
-                if (!Arrays.asList(9, 10, 11, 12, 13, 14, 15, 16, 23, 24, 32, 40, 48, 56).contains(field) && (board.getplayeratpos(field - 15)!=Player.RR)) {
-                    String cur = Board.fieldToString(field);
-                    String to = Board.fieldToString(field-15);
-                    res.add(cur + "-" + to);
+                    //Rechts innen (von Blau gesehen)
+                    if (!redDoubleMovesRightInner.contains(field) && (board.getplayeratpos(field - 15)!=Player.RR)) {
+                        res.add(new int[] {field, field - 15});
+                    }
                 }
             }
         }
 
         // Duplikate entfernen
-        Set<String> set = new HashSet<>(res);
+        Set<int[]> set = new HashSet<>(res);
         res.clear();
         res.addAll(set);
 
         return res;
     }
 
-     /*
-    ArrayList<String> getPossibleKnightMoves(boolean currentPlayer, int knightPosition) {
-        ArrayList<String> possibleMoves = new ArrayList<>();
+    public static ArrayList<String> convertMoves(ArrayList<int[]> moves) {
+        ArrayList<String> stringList = new ArrayList<>();
 
-        // Define the chess board
-        String[] columns = {"A", "B", "C", "D", "E", "F", "G", "H"};
-
-        // Convert knight position to coordinates
-        int row = (knightPosition - 1) / 8;
-        int column = (knightPosition - 1) % 8;
-
-        // Define all possible moves for a knight
-        int[] moveX = {2, 1, -1, -2};
-        int[] moveY = {1, 2, 2, 1};
-
-        // Adjust move directions based on current player
-        int direction = currentPlayer ? 1 : -1;
-
-        // Iterate through all possible moves
-        for (int i = 0; i < moveX.length; i++) {
-            int newX = column + moveX[i];
-            int newY = row + direction * moveY[i];
-            Player playerAtPos = getplayeratpos(newX * newY);
-
-            // Check if the new position is within the board and moving forward/backward
-            if (newX >= 0 && newX < 8 && newY >= 0 && newY < 8 && playerAtPos == Player.R || playerAtPos == Player.B || playerAtPos == Player.EMPTY) {
-                // Convert coordinates to chess notation
-                String start = columns[column] + (row + 1);
-                String end = columns[newX] + (newY + 1);
-                possibleMoves.add(start + " - " + end);
-            }
+        for (int[] move : moves) {
+            stringList.add(Board.fieldToString(move[0]) + "-" + Board.fieldToString(move[1]));
         }
 
-        return possibleMoves;
-    } */
+        Collections.sort(stringList);
+        return stringList;
+    }
 }
+
