@@ -16,6 +16,14 @@ public class Game {
                 return Player.B;
             }
         }
+        //gucken, ob noch possibleMoves hat
+        if (Move.possibleMoves(board).isEmpty()) {
+            if (board.blauIstDran){
+                return Player.R;
+            } else {
+                return Player.B;
+            }
+        }
         //wenn noch niemand gewonnen hat
         return Player.EMPTY;
     }
@@ -36,7 +44,7 @@ public class Game {
             return new MoveEvaluation(board.evaluate(), lastMove);
         }
 
-        ArrayList<String> allPossibleMoves = Move.possiblemoves(board);
+        ArrayList<String> allPossibleMoves = Move.convertMoves(Move.possibleMoves(board));
         MoveEvaluation bestMove = new MoveEvaluation(maximizingPlayer ? Integer.MIN_VALUE : Integer.MAX_VALUE, "");
 
         for (String move : allPossibleMoves) {
@@ -68,7 +76,7 @@ public class Game {
         return bestMove;
     }
     public static void main(String[] args) {
-        Board startBoard = new Board("b0b0b0b0b0b0/1b0b0b0b0b0b01/8/8/8/8/1r0r0r0r0r0r01/r0r0r0r0r0r0 b");
+        Board startBoard = new Board("1b01b01b0/1b06/3b04/8/4b0r02/2b03r01/3r0r03/r03r01 b");
         int maxDepth = 3;
         MoveEvaluation bestMoveEvaluation = iterativeDeepening(startBoard, maxDepth, useAlphaBeta);
         System.out.println("Best move: " + bestMoveEvaluation.move + " with value: " + bestMoveEvaluation.evaluation);
