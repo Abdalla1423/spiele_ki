@@ -76,8 +76,8 @@ public class Game {
         return bestMove;
     }
     public static void main(String[] args) {
-        Board startBoard = new Board("1b01b01b0/1b06/3b04/8/4b0r02/2b03r01/3r0r03/r03r01 b");
-        int maxDepth = 3;
+        Board startBoard = new Board("b01b0b0b0b0/1b0b01b01b01/3b01b02/2b05/8/2r0r01rr2/1r04r01/r0r0r0r0r0r0 r");
+        int maxDepth = 1;
         MoveEvaluation bestMoveEvaluation = iterativeDeepening(startBoard, maxDepth, useAlphaBeta);
         System.out.println("Best move: " + bestMoveEvaluation.move + " with value: " + bestMoveEvaluation.evaluation);
     }

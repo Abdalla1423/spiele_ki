@@ -119,45 +119,45 @@ public class Board {
         Player topos = getplayeratpos(topo);
 
         switch (frompos) {
-            case Player.RR, Player.BR -> rotzweiteebene &= ~(1L << (frompo-1));
-            case Player.BB, Player.RB -> blauzweiteebene &= ~(1L << (frompo-1));
-            case Player.R -> rotersteebene &= ~(1L << (frompo-1));
-            case Player.B -> blauersteebene &= ~(1L << (frompo-1));
+            case RR, BR -> rotzweiteebene &= ~(1L << (frompo-1));
+            case BB, RB -> blauzweiteebene &= ~(1L << (frompo-1));
+            case R -> rotersteebene &= ~(1L << (frompo-1));
+            case B -> blauersteebene &= ~(1L << (frompo-1));
         }
 
         switch (topos) {
-            case Player.RR, Player.BR -> {
+            case RR, BR -> {
                 rotzweiteebene &= ~(1L << (topo-1));
                 blauzweiteebene |= 1L << (topo-1);
             }
-            case Player.BB, Player.RB -> {
+            case BB, RB -> {
                 rotzweiteebene |= 1L << (topo-1);
                 blauzweiteebene &= ~(1L << (topo-1));
             }
-            case Player.R -> {
+            case R -> {
                 switch (frompos) {
-                    case Player.BB, Player.RB -> blauzweiteebene |= 1L << (topo-1);
-                    case Player.RR, Player.R, Player.BR -> rotzweiteebene |= 1L << (topo-1);
+                    case BB, RB -> blauzweiteebene |= 1L << (topo-1);
+                    case RR, R, BR -> rotzweiteebene |= 1L << (topo-1);
                     default -> {
                         rotersteebene &= ~(1L << (topo-1));
                         blauersteebene |= 1L << (topo-1);
                     }
                 }
             }
-            case Player.B -> {
+            case B -> {
                 switch (frompos) {
-                    case Player.BB, Player.B, Player.RB -> blauzweiteebene |= 1L << (topo-1);
-                    case Player.RR, Player.BR -> rotzweiteebene |= 1L << (topo-1);
+                    case BB, B, RB -> blauzweiteebene |= 1L << (topo-1);
+                    case RR, BR -> rotzweiteebene |= 1L << (topo-1);
                     default -> {
                         blauersteebene &= ~(1L << (topo-1));
                         rotersteebene |= 1L << (topo-1);
                     }
                 }
             }
-            case Player.EMPTY -> {
+            case EMPTY -> {
                 switch (frompos) {
-                    case Player.BB, Player.B, Player.RB -> blauersteebene |= 1L << (topo-1);
-                    case Player.RR, Player.R, Player.BR -> rotersteebene |= 1L << (topo-1);
+                    case BB, B, RB -> blauersteebene |= 1L << (topo-1);
+                    case RR, R, BR -> rotersteebene |= 1L << (topo-1);
                     default -> {
                         blauersteebene &= ~(1L << (topo-1));
                         rotersteebene |= 1L << (topo-1);
@@ -170,13 +170,24 @@ public class Board {
     int evaluate() {
         int result=0;
 
-        for (int i = 8; i > 0; i--) {
-            for (int field = 8 * i - 7; field < i * 8; field++) {
-                if (Player.B == getplayeratpos(field))  {
-                    result = i;
+        if (this.blauIstDran) {
+            for (int i = 8; i > 0; i--) {
+                for (int field = 8 * i - 7; field < i * 8; field++) {
+                    if (Player.B == getplayeratpos(field))  {
+                        return i;
+                    }
+                }
+            }
+        } else {
+            for (int i = 1; i < 9; i++) {
+                for (int field = 8 * i - 7; field < i * 8; field++) {
+                    if (Player.R == getplayeratpos(field))  {
+                        return -i;
+                    }
                 }
             }
         }
+
 
 /*
         for (int i = 1; i < 9; i++) {

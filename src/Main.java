@@ -15,7 +15,7 @@ public class Main {
                 break;
             } 
             //noch niemand hat gewonnen
-            ArrayList<String> possbleMoves = Move.possiblemoves(board);
+            ArrayList<String> possbleMoves = Move.convertMoves(Move.possibleMoves(board));
             String currentMove = Move.pickMove(possbleMoves);
             System.out.println(currentMove);
             String[] curr = currentMove.split("-");

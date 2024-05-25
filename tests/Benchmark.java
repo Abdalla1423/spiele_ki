@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 public class Benchmark {
@@ -6,7 +7,7 @@ public class Benchmark {
         long startTime = System.nanoTime();
         for (int i = 0; i < 1000; i++)  {
             Board b = new Board("b01b0b0b0b0/1b0b01b01b01/3b01b02/2b05/8/2r0r01rr2/1r04r01/r0r0r0r0r0r0 r");
-            Move.possiblemoves(b);
+            Move.convertMoves(Move.possibleMoves(b));
         }
         long endTime = System.nanoTime();
 
@@ -17,7 +18,7 @@ public class Benchmark {
         long startTime = System.nanoTime();
         for (int i = 0; i < 1000; i++)  {
             Board b = new Board("b02b01b0/3b01b02/b02b02b01/b01b05/5r02/1r02r02r0/2rrr02r01/r03r01 b");
-            Move.possiblemoves(b);
+            Move.convertMoves(Move.possibleMoves(b));
         }
         long endTime = System.nanoTime();
 
@@ -28,7 +29,7 @@ public class Benchmark {
         long startTime = System.nanoTime();
         for (int i = 0; i < 1000; i++)  {
             Board b = new Board("b01b01b01/8/2b03b01/1b06/1r01b01b02/3r04/2r03r01/4r01 r");
-            Move.possiblemoves(b);
+            Move.convertMoves(Move.possibleMoves(b));
         }
         long endTime = System.nanoTime();
 
