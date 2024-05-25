@@ -169,8 +169,9 @@ public class Board {
 
     int evaluate() {
         int result=0;
+        // this.blauIstDran = false;
 
-        if (this.blauIstDran) {
+        /*if (this.blauIstDran) {
             for (int i = 8; i > 0; i--) {
                 for (int field = 8 * i - 7; field < i * 8; field++) {
                     if (Player.B == getplayeratpos(field))  {
@@ -188,20 +189,24 @@ public class Board {
             }
         }
 
+         */
 
-/*
+
+        // verlieren -10, verlieren -11, gewinnen -23 --> -2
+        //  verlieren -15, verliern -16, gewinnen -33 --> -2
         for (int i = 1; i < 9; i++) {
             for (int field = 8*i-7; field < i*8; field++) {
+                int factor = (int) Math.pow(i, 2);
                 switch (getplayeratpos(field)) {
-                    case Player.B -> result+=9+i;
-                    case Player.R -> result-=18-i;
-                    case Player.BB -> result+=2*(9+i)+1;
-                    case Player.RR -> result-=2*(18-i)+1;
-                    case Player.RB -> result+=(9+i)+1;
-                    case Player.BR -> result-=(18-i)+1;
+                    case B -> result+=9+factor;
+                    case R -> result-=18-factor;
+                    case BB -> result+=2*(9+factor)+1;
+                    case RR -> result-=2*(18-factor)+1;
+                    case RB -> result+=(9+factor)+1;
+                    case BR -> result-=(18-factor)+1;
                 }
             }
-        } */
+        }
 
 
         /*

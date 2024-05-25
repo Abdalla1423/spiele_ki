@@ -34,27 +34,28 @@ public class Game {
     public static MoveEvaluation iterativeDeepening(Board startBoard, int maxDepth, boolean useAlphaBeta) {
         MoveEvaluation bestMoveEvaluation = new MoveEvaluation(0, "");
         for (int depth = 1; depth <= maxDepth; depth++) {
-            bestMoveEvaluation = minimaxAlphaBeta(startBoard, depth, Integer.MIN_VALUE, Integer.MAX_VALUE, true, useAlphaBeta, "");
+            bestMoveEvaluation = minimaxAlphaBeta(startBoard, depth, Integer.MIN_VALUE, Integer.MAX_VALUE, useAlphaBeta, "");
         }
         return bestMoveEvaluation;
     }
 
-    public static MoveEvaluation minimaxAlphaBeta(Board board, int depth, int alpha, int beta, boolean maximizingPlayer, boolean useAlphaBeta, String lastMove) {
+    public static MoveEvaluation minimaxAlphaBeta(Board board, int depth, int alpha, int beta, boolean useAlphaBeta, String lastMove) {
         if (depth == 0 || thisPlayerHasWon(board) != Player.EMPTY) {
             return new MoveEvaluation(board.evaluate(), lastMove);
         }
 
         ArrayList<String> allPossibleMoves = Move.convertMoves(Move.possibleMoves(board));
-        MoveEvaluation bestMove = new MoveEvaluation(maximizingPlayer ? Integer.MIN_VALUE : Integer.MAX_VALUE, "");
+        MoveEvaluation bestMove = new MoveEvaluation(board.blauIstDran ? Integer.MIN_VALUE : Integer.MAX_VALUE, "");
 
         for (String move : allPossibleMoves) {
             Board nextBoard = new Board(board.blauzweiteebene, board.rotzweiteebene, board.blauersteebene, board.rotersteebene);
             String[] curr = move.split("-");
             nextBoard.updateBoard(curr[0], curr[1]);
             nextBoard.blauIstDran = !board.blauIstDran;
-            MoveEvaluation eval = minimaxAlphaBeta(nextBoard, depth - 1, alpha, beta, !maximizingPlayer, useAlphaBeta, move);
+            MoveEvaluation eval = minimaxAlphaBeta(nextBoard, depth - 1, alpha, beta,  useAlphaBeta, move);
 
-            if (maximizingPlayer) {
+
+            if (board.blauIstDran) {
                 if (eval.evaluation > bestMove.evaluation) {
                     bestMove.evaluation = eval.evaluation;
                     bestMove.move = move;
