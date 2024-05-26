@@ -111,9 +111,7 @@ public class Board {
     }
 
 
-    void updateBoard(String fromposition, String toposition) {
-        int frompo = stringToField(fromposition);
-        int topo = stringToField(toposition);
+    void updateBoard(int frompo, int topo) {
 
         Player frompos = getplayeratpos(frompo);
         Player topos = getplayeratpos(topo);
@@ -168,6 +166,16 @@ public class Board {
     }
 
     int evaluate() {
+        if (Move.possibleMoves(this).isEmpty()){
+            if (this.blauIstDran) {
+                return -10000;
+            } else {
+                return 10000;
+            }
+        }
+
+
+
         int result=0;
         // this.blauIstDran = false;
 
@@ -199,7 +207,7 @@ public class Board {
         //
         for (int i = 1; i < 9; i++) {
             for (int field = 8*i-7; field < i*8; field++) {
-                int factor = (int) Math.pow(i, 2);
+
                 //int factor = i;
                 switch (getplayeratpos(field)) {
                     case B -> result+= field < 58 ? (9 + i) * i: 10000;

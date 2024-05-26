@@ -29,10 +29,18 @@ public class Game {
         return Player.EMPTY;
     }
 
-    private static boolean useAlphaBeta = true; // Change this to switch between algorithms
+    private static boolean useAlphaBeta = false; // Change this to switch between algorithms
 
+    private static long numOfSearchedZustand = 0;
 
     public static MoveEvaluation iterativeDeepening(Board startBoard, int maxDepth, boolean useAlphaBeta) {
+        /*MoveEvaluation bestMoveEvaluation = new MoveEvaluation(0, "");
+        bestMoveEvaluation = minimaxAlphaBeta(startBoard, 5, Integer.MIN_VALUE, Integer.MAX_VALUE, useAlphaBeta, "");
+        System.out.println("Anzhal Zustände: " + numOfSearchedZustand);
+        return bestMoveEvaluation;
+
+         */
+
         MoveEvaluation bestMoveEvaluation = new MoveEvaluation(0, "");
         for (int depth = 1; depth <= maxDepth; depth++) {
             bestMoveEvaluation = minimaxAlphaBeta(startBoard, depth, Integer.MIN_VALUE, Integer.MAX_VALUE, useAlphaBeta, "");
@@ -45,27 +53,27 @@ public class Game {
             return new MoveEvaluation(board.evaluate(), lastMove);
         }
 
-        ArrayList<String> allPossibleMoves = Move.convertMoves(Move.possibleMoves(board));
+        ArrayList<int[]> allPossibleMoves = Move.possibleMoves(board);
         MoveEvaluation bestMove = new MoveEvaluation(board.blauIstDran ? Integer.MIN_VALUE : Integer.MAX_VALUE, "");
 
-        for (String move : allPossibleMoves) {
+        for (int[] move : allPossibleMoves) {
             Board nextBoard = new Board(board.blauzweiteebene, board.rotzweiteebene, board.blauersteebene, board.rotersteebene);
-            String[] curr = move.split("-");
-            nextBoard.updateBoard(curr[0], curr[1]);
+            nextBoard.updateBoard(move[0], move[1]);
             nextBoard.blauIstDran = !board.blauIstDran;
-            MoveEvaluation eval = minimaxAlphaBeta(nextBoard, depth - 1, alpha, beta,  useAlphaBeta, move);
-
+            String moveString = Move.moveToString(move);
+            MoveEvaluation eval = minimaxAlphaBeta(nextBoard, depth - 1, alpha, beta,  useAlphaBeta, moveString);
+            // numOfSearchedZustand++;
 
             if (board.blauIstDran) {
                 if (eval.evaluation > bestMove.evaluation) {
                     bestMove.evaluation = eval.evaluation;
-                    bestMove.move = move;
+                    bestMove.move = moveString;
                 }
                 alpha = Math.max(alpha, eval.evaluation);
             } else {
                 if (eval.evaluation < bestMove.evaluation) {
                     bestMove.evaluation = eval.evaluation;
-                    bestMove.move = move;
+                    bestMove.move = moveString;
                 }
                 beta = Math.min(beta, eval.evaluation);
             }

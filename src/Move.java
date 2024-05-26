@@ -14,15 +14,11 @@ public class Move {
     static Set<Integer> redDoubleMovesLeftInner = Set.of(9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 25, 33, 41, 49);
 
 
-    public static String pickMove(ArrayList<String> allMoves) {
+    public static int[] pickRandomMove(ArrayList<int[]> allMoves) {
         int newMove = ThreadLocalRandom.current().nextInt(0, allMoves.size());
         return allMoves.get(newMove);
     }
 
-    public static String pickRandomMove(ArrayList<String> allMoves) {
-        int newMove = ThreadLocalRandom.current().nextInt(0, allMoves.size());
-        return allMoves.get(newMove);
-    }
     public static ArrayList<int[]> possibleMoves(Board board) {
         ArrayList<int[]> res = new ArrayList<>();
         for (int field = 1; field < 64; field++) {
@@ -136,11 +132,15 @@ public class Move {
         return res;
     }
 
+    public static String moveToString(int[] move) {
+        return Board.fieldToString(move[0]) + "-" + Board.fieldToString(move[1]);
+    }
+
     public static ArrayList<String> convertMoves(ArrayList<int[]> moves) {
         ArrayList<String> stringList = new ArrayList<>();
 
         for (int[] move : moves) {
-            stringList.add(Board.fieldToString(move[0]) + "-" + Board.fieldToString(move[1]));
+            stringList.add(moveToString(move));
         }
 
         Collections.sort(stringList);

@@ -15,11 +15,13 @@ public class Main {
                 break;
             } 
             //noch niemand hat gewonnen
-            ArrayList<String> possbleMoves = Move.convertMoves(Move.possibleMoves(board));
-            String currentMove = Move.pickMove(possbleMoves);
-            System.out.println(currentMove);
-            String[] curr = currentMove.split("-");
-            board.updateBoard(curr[0], curr[1]);
+            /* ArrayList<int[]> possibleMoves = Move.possibleMoves(board);
+            int[] currentMove = Move.pickRandomMove(possibleMoves);
+            String[] curr = Move.moveToString(currentMove);
+            System.out.println(curr);
+            board.updateBoard(currentMove[0], currentMove[1]);
+
+             */
         }
     }
 }
