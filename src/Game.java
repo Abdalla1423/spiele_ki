@@ -29,6 +29,14 @@ public class Game {
         return Player.EMPTY;
     }
 
+    public static double timeManagment(double timeLeft, Board board) {
+        return timeLeft/board.numofPlayers();
+    }
+
+    public static int timeToDepth(double time) {
+        return Math.max(4, Math.min(6, (int) time));
+    }
+
     private static boolean useAlphaBeta = false; // Change this to switch between algorithms
 
     private static long numOfSearchedZustand = 0;
@@ -62,23 +70,9 @@ public class Game {
             nextBoard.blauIstDran = !board.blauIstDran;
             String moveString = Move.moveToString(move);
             currMoves.add(moveString);
-            if (moveString.equals("A3-B2") && depth == 5) {
-                int x = 0;
-            }
-
-            if (moveString.equals("A3-A2") && depth == 5) {
-                int x = 0;
-            }
             MoveEvaluation eval = minimaxAlphaBeta(nextBoard, depth - 1, alpha, beta,  useAlphaBeta, moveString, currMoves);
 
             // numOfSearchedZustand++;
-            // System.out.println(moveString + " " + depth);
-            if (eval.evaluation == -9940) {
-                if (currMoves.contains("A3-B2") || currMoves.contains("A3-A2")) {
-                    System.out.println(currMoves);
-                }
-                int x = 0;
-            }
             currMoves.remove(currMoves.size()-1);
 
             if (board.blauIstDran) {

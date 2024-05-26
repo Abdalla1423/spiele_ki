@@ -101,6 +101,21 @@ class PossibleMoves {
 
 
 class AlphaBetaTest {
+    // int Settime = 120;
+
+    /*@Test
+    public void testAlphaBetaZero() { // Gruppe G 1
+        Board b = new Board("b01b0b0b0b0/1b0b01b01b01/3b01b02/2b05/8/2r0r01rr2/1r04r01/r0r0r0r0r0r0 r");
+        String expectedResult = "E3-E2";
+        double timeToPlay = Game.timeManagment(Settime, b);
+        int depth = Game.timeToDepth(timeToPlay);
+        MoveEvaluation actualResult = Game.iterativeDeepening(b, depth, true);
+        Assertions.assertEquals(expectedResult, actualResult.move);
+
+    }
+
+     */
+
     @Test
     public void testAlphaBetaOne() { // Gruppe G 1
         Board b = new Board("b02b01b0/4r03/1b02r03/1bb6/8/4r0b02/1r03r02/r01r02r0 r");

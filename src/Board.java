@@ -165,6 +165,16 @@ public class Board {
         }
     }
 
+    int numofPlayers () {
+        int num = 0;
+        for (int i = 1; i < 9; i++) {
+            for (int field = 8 * i - 7; field < i * 8; field++) {
+                if (getplayeratpos(field) != Player.EMPTY) num++;
+            }
+        }
+       return num;
+    }
+
     int evaluate(int depth) {
         if (Move.possibleMoves(this).isEmpty()){
             if (this.blauIstDran) {
