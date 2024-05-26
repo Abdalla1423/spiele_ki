@@ -165,12 +165,12 @@ public class Board {
         }
     }
 
-    int evaluate() {
+    int evaluate(int depth) {
         if (Move.possibleMoves(this).isEmpty()){
             if (this.blauIstDran) {
-                return -10000;
+                return -10000 + depth;
             } else {
-                return 10000;
+                return 10000 - depth;
             }
         }
 
@@ -182,27 +182,27 @@ public class Board {
                 switch (getplayeratpos(field)) {
                     case B -> {
                         if (field < 58) result += (9 + i) * i;
-                        else return 100000;
+                        else return 10000 - depth;
                     }
                     case R -> {
                         if (field > 8) result -= (18-i) * (9 - i);
-                        else return -100000;
+                        else return -10000 + depth;
                     }
                     case BB -> {
                         if (field < 58) result  += (2*(9+i)+1) * i;
-                        else return 100000;
+                        else return 10000 - depth;
                     }
                     case RR -> {
                         if (field > 8) result -= (2*(18-i)+1) * (9 - i);
-                        else return -100000;
+                        else return -10000 + depth;
                     }
                     case RB -> {
                         if (field < 58) result += ((9+i)+1) * i;
-                        else return 100000;
+                        else return 10000 - depth;
                     }
                     case BR -> {
                         if (field > 8) result -= ((18-i)+1) * (9 - i);
-                        else return -100000;
+                        else return -10000 + depth;
                     }
                 }
             }

@@ -43,14 +43,14 @@ public class Game {
 
         MoveEvaluation bestMoveEvaluation = new MoveEvaluation(0, "");
         for (int depth = 1; depth <= maxDepth; depth++) {
-            bestMoveEvaluation = minimaxAlphaBeta(startBoard, depth, Integer.MIN_VALUE, Integer.MAX_VALUE, useAlphaBeta, "");
+            bestMoveEvaluation = minimaxAlphaBeta(startBoard, depth, Integer.MIN_VALUE, Integer.MAX_VALUE, useAlphaBeta, "", new ArrayList<String>());
         }
         return bestMoveEvaluation;
     }
 
-    public static MoveEvaluation minimaxAlphaBeta(Board board, int depth, int alpha, int beta, boolean useAlphaBeta, String lastMove) {
+    public static MoveEvaluation minimaxAlphaBeta(Board board, int depth, int alpha, int beta, boolean useAlphaBeta, String lastMove, ArrayList<String> currMoves) {
         if (depth == 0 || thisPlayerHasWon(board) != Player.EMPTY) {
-            return new MoveEvaluation(board.evaluate(), lastMove);
+            return new MoveEvaluation(board.evaluate(currMoves.size() * 20), lastMove);
         }
 
         ArrayList<int[]> allPossibleMoves = Move.possibleMoves(board);
@@ -61,8 +61,25 @@ public class Game {
             nextBoard.updateBoard(move[0], move[1]);
             nextBoard.blauIstDran = !board.blauIstDran;
             String moveString = Move.moveToString(move);
-            MoveEvaluation eval = minimaxAlphaBeta(nextBoard, depth - 1, alpha, beta,  useAlphaBeta, moveString);
+            currMoves.add(moveString);
+            if (moveString.equals("A3-B2") && depth == 5) {
+                int x = 0;
+            }
+
+            if (moveString.equals("A3-A2") && depth == 5) {
+                int x = 0;
+            }
+            MoveEvaluation eval = minimaxAlphaBeta(nextBoard, depth - 1, alpha, beta,  useAlphaBeta, moveString, currMoves);
+
             // numOfSearchedZustand++;
+            // System.out.println(moveString + " " + depth);
+            if (eval.evaluation == -9940) {
+                if (currMoves.contains("A3-B2") || currMoves.contains("A3-A2")) {
+                    System.out.println(currMoves);
+                }
+                int x = 0;
+            }
+            currMoves.remove(currMoves.size()-1);
 
             if (board.blauIstDran) {
                 if (eval.evaluation > bestMove.evaluation) {

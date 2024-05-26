@@ -76,7 +76,7 @@ public class Move {
                 //rot einzel figur
                 if (getPlayerAtPos == Player.R) {
                     //zug nach vorne
-                    if (field > 8 && (board.getplayeratpos(field - 8) == Player.EMPTY || board.getplayeratpos(field - 8) == Player.R )) {
+                    if (field - 8 != 1 && field - 8 != 8 && field > 8 && (board.getplayeratpos(field - 8) == Player.EMPTY || board.getplayeratpos(field - 8) == Player.R )) {
                         res.add(new int[] {field, field - 8});
                     }
                     //nach rechts (von blau aus gesehen)
