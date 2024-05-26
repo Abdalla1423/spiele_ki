@@ -174,141 +174,40 @@ public class Board {
             }
         }
 
-
-
         int result=0;
-        // this.blauIstDran = false;
-
-        /*if (this.blauIstDran) {
-            for (int i = 8; i > 0; i--) {
-                for (int field = 8 * i - 7; field < i * 8; field++) {
-                    if (Player.B == getplayeratpos(field))  {
-                        return i;
-                    }
-                }
-            }
-        } else {
-            for (int i = 1; i < 9; i++) {
-                for (int field = 8 * i - 7; field < i * 8; field++) {
-                    if (Player.R == getplayeratpos(field))  {
-                        return -i;
-                    }
-                }
-            }
-        }
-
-         */
-
-
-        // verlieren -10, verlieren -11, gewinnen -23 --> -2
-        //  verlieren -15, verliern -16, gewinnen -33 --> -2
-        // --> test 1
-        // variable = (condition) ? expressionTrue :  expressionFalse;
-        //
         for (int i = 1; i < 9; i++) {
             for (int field = 8*i-7; field < i*8; field++) {
 
                 //int factor = i;
                 switch (getplayeratpos(field)) {
-                    case B -> result+= field < 58 ? (9 + i) * i: 10000;
-                    case R -> result-= field > 8 ? (18-i) * (9 - i) : 10000;
-                    case BB -> result+=field < 58 ? (2*(9+i)+1) * i: 20001;
-                    case RR -> result-=field > 8 ? (2*(18-i)+1) * (9 - i) : 20001;
-                    case RB -> result+=field < 58 ? ((9+i)+1) * i: 10001;
-                    case BR -> result-=field > 8 ? ((18-i)+1) * (9 - i) : 10001;
+                    case B -> {
+                        if (field < 58) result += (9 + i) * i;
+                        else return 100000;
+                    }
+                    case R -> {
+                        if (field > 8) result -= (18-i) * (9 - i);
+                        else return -100000;
+                    }
+                    case BB -> {
+                        if (field < 58) result  += (2*(9+i)+1) * i;
+                        else return 100000;
+                    }
+                    case RR -> {
+                        if (field > 8) result -= (2*(18-i)+1) * (9 - i);
+                        else return -100000;
+                    }
+                    case RB -> {
+                        if (field < 58) result += ((9+i)+1) * i;
+                        else return 100000;
+                    }
+                    case BR -> {
+                        if (field > 8) result -= ((18-i)+1) * (9 - i);
+                        else return -100000;
+                    }
                 }
             }
         }
 
-
-        /*
-
-        //Reihe 1
-        for (int field=2; field<8; field++) {
-           switch (getplayeratpos(field)) {
-               case Player.B -> result+=10;
-               case Player.R, Player.BR, Player.RR -> result = -10000;
-               case Player.BB -> result+=22;
-               case Player.RB -> result+=11;
-           }
-        }
-        //Reihe 2 (blau + 1 zu reihe davor)
-        for (int field=9; field<16; field++) {
-            switch (getplayeratpos(field)) {
-                case Player.B -> result+=11;
-                case Player.R -> result-=25;
-                case Player.BB -> result+=24;
-                case Player.RR, Player.BR -> result-=60;
-                case Player.RB -> result+=12;
-            }
-        }
-        //Reihe 3 (blau+1 im vergleich zu reihe davor)
-        for (int field=17; field<24; field++) {
-            switch (getplayeratpos(field)) {
-                case Player.B -> result+=13;
-                case Player.R -> result-=16;
-                case Player.BB -> result+=26;
-                case Player.RR, Player.BR -> result-=50;
-                case Player.RB -> result+=13;
-            }
-        }
-        //Reihe 4 (blau + 1 zu reihe davor)
-        for (int field=25; field<32; field++) {
-            switch (getplayeratpos(field)) {
-                case Player.B -> result+=16;
-                case Player.R -> result-=15;
-                case Player.BB -> result+=28;
-                case Player.RR -> result-=32;
-                case Player.RB -> result+=16;
-                case Player.BR -> result-=16;
-            }
-        }
-        //Reihe 5 (blau+2 im vergleich zu reihe davor)
-        for (int field=33; field<40; field++) {
-            switch (getplayeratpos(field)) {
-                case Player.B -> result+=15;
-                case Player.R -> result-=13;
-                case Player.BB -> result+=32;
-                case Player.RR -> result-=28;
-                case Player.RB -> result+=16;
-                case Player.BR -> result-=14;
-            }
-        }
-        //Reihe 6 (blau+1 im vergleich zu reihe davor)
-        for (int field=41; field<48; field++) {
-            switch (getplayeratpos(field)) {
-                case Player.B -> result+=16;
-                case Player.R -> result-=12;
-                case Player.BB -> result+=50; //gewinnt das spiel im nächsten zug
-                case Player.RR -> result-=26;
-                case Player.RB -> result+=50; //gewinnt das spiel im nächsten zug
-                case Player.BR -> result-=13;
-            }
-        }
-        //Reihe 7 (blau+11 im vergleich zu reihe davor)
-        for (int field=49; field<56; field++) {
-            switch (getplayeratpos(field)) {
-                case Player.B -> result+=25;
-                case Player.BB -> result+=60; //gewinnt das spiel im nächsten zug
-                case Player.R -> result-=11;
-                case Player.RR -> result-=24;
-                case Player.RB -> result+=60; //gewinnt das spiel im nächsten zug
-                case Player.BR -> result-=12;
-            }
-        }
-        //Reihe 8
-        for (int field=57; field<63; field++) {
-            switch (getplayeratpos(field)) {
-                case Player.B -> result=10000;
-                case Player.BB -> result=10000;
-                case Player.R -> result-=10;
-                case Player.RR -> result-=22;
-                case Player.RB -> result=10000;
-                case Player.BR -> result-=11;
-            }
-        }
-
-         */
 
         return result;
     }
@@ -357,4 +256,3 @@ public class Board {
     }
 
 }
-
