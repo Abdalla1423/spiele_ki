@@ -1,4 +1,3 @@
-package tests;
 
 public class Benchmark {
     public void benchmarkOneRuntime() { // Early Game
@@ -33,7 +32,7 @@ public class Benchmark {
         System.out.println("Bewertungsfunktion");
         System.out.println("    10000 Iterationen: " + resultBewertungsfunktion + "ms");
         System.out.println("    Durchschnittliche Laufzeit: " + resultBewertungsfunktion / 10000 + "ms");
-        System.out.println("    Bester Zug: " + res.move);
+        System.out.println("    Bester Zug: " + Move.moveToString(res.move));
         System.out.println(" ");
 
 
@@ -54,7 +53,7 @@ public class Benchmark {
         System.out.println("    Gesamtlaufzeit Tiefe 2: " + resultMinMax2 + "ms");
         System.out.println("    Untersuchte Stellungen: " + numOfSearchedZustandMM2);
         System.out.println("    Zustände pro ms: " + zustandProMs2);
-        System.out.println("    Bester Zug: " + res.move);
+        System.out.println("    Bester Zug: " + Move.moveToString(res.move));
         System.out.println(" ");
 
 
@@ -72,7 +71,7 @@ public class Benchmark {
         System.out.println("    Gesamtlaufzeit Tiefe 3: " + resultMinMax3 + "ms");
         System.out.println("    Untersuchte Stellungen: " + numOfSearchedZustandMM3);
         System.out.println("    Zustände pro ms: " + zustandProMs3);
-        System.out.println("    Bester Zug: " + res.move);
+        System.out.println("    Bester Zug: " + Move.moveToString(res.move));
         System.out.println(" ");
 
 
@@ -90,7 +89,7 @@ public class Benchmark {
         System.out.println("    Gesamtlaufzeit Tiefe 4: " + resultMinMax4 + "ms");
         System.out.println("    Untersuchte Stellungen: " + numOfSearchedZustandMM4);
         System.out.println("    Zustände pro ms: " + zustandProMs4);
-        System.out.println("    Bester Zug: " + res.move);
+        System.out.println("    Bester Zug: " + Move.moveToString(res.move));
         System.out.println(" ");
 
 
@@ -110,7 +109,7 @@ public class Benchmark {
         System.out.println("    Gesamtlaufzeit Tiefe 2: " + resultAB2 + "ms (" + (resultAB2 - resultMinMax2) + "ms)");
         System.out.println("    Untersuchte Stellungen: " + numOfSearchedZustandAB2 + " (" + (numOfSearchedZustandAB2 - numOfSearchedZustandMM2) + ")");
         System.out.println("    Zustände pro ms: " + zustandProMsAB2 + " (" + (zustandProMsAB2 - zustandProMs2) + ")");
-        System.out.println("    Bester Zug: " + res.move);
+        System.out.println("    Bester Zug: " + Move.moveToString(res.move));
         System.out.println(" ");
 
 
@@ -128,7 +127,7 @@ public class Benchmark {
         System.out.println("    Gesamtlaufzeit Tiefe 3: " + resultAB3 + "ms (" + (resultAB3 - resultMinMax3) + "ms)");
         System.out.println("    Untersuchte Stellungen: " + numOfSearchedZustandAB3 + " (" + (numOfSearchedZustandAB3 - numOfSearchedZustandMM3) + ")");
         System.out.println("    Zustände pro ms: " + zustandProMsAB3 + " (" + -(zustandProMsAB3 - zustandProMs3) + ")");
-        System.out.println("    Bester Zug: " + res.move);
+        System.out.println("    Bester Zug: " + Move.moveToString(res.move));
         System.out.println(" ");
 
 
@@ -146,7 +145,7 @@ public class Benchmark {
         System.out.println("    Gesamtlaufzeit Tiefe 4: " + resultAB4 + "ms (" + (resultAB4 - resultMinMax4) + "ms)");
         System.out.println("    Untersuchte Stellungen: " + numOfSearchedZustandAB4 + " (" + (numOfSearchedZustandAB4 - numOfSearchedZustandMM4) + ")");
         System.out.println("    Zustände pro ms: " + zustandProMsAB4 + " (" + (zustandProMsAB4 - zustandProMs4) + ")");
-        System.out.println("    Bester Zug: " + res.move);
+        System.out.println("    Bester Zug: " + Move.moveToString(res.move));
         System.out.println(" ");
     }
 
@@ -182,7 +181,7 @@ public class Benchmark {
         System.out.println("Bewertungsfunktion");
         System.out.println("    10000 Iterationen: " + resultBewertungsfunktion + "ms");
         System.out.println("    Durchschnittliche Laufzeit: " + resultBewertungsfunktion / 10000 + "ms");
-        System.out.println("    Bester Zug: " + res.move);
+        System.out.println("    Bester Zug: " + Move.moveToString(res.move));
         System.out.println(" ");
 
 
@@ -203,7 +202,7 @@ public class Benchmark {
         System.out.println("    Gesamtlaufzeit Tiefe 2: " + resultMinMax2 + "ms");
         System.out.println("    Untersuchte Stellungen: " + numOfSearchedZustandMM2);
         System.out.println("    Zustände pro ms: " + zustandProMs2);
-        System.out.println("    Bester Zug: " + res.move);
+        System.out.println("    Bester Zug: " + Move.moveToString(res.move));
         System.out.println(" ");
 
 
@@ -221,7 +220,7 @@ public class Benchmark {
         System.out.println("    Gesamtlaufzeit Tiefe 3: " + resultMinMax3 + "ms");
         System.out.println("    Untersuchte Stellungen: " + numOfSearchedZustandMM3);
         System.out.println("    Zustände pro ms: " + zustandProMs3);
-        System.out.println("    Bester Zug: " + res.move);
+        System.out.println("    Bester Zug: " + Move.moveToString(res.move));
         System.out.println(" ");
 
 
@@ -239,7 +238,7 @@ public class Benchmark {
         System.out.println("    Gesamtlaufzeit Tiefe 4: " + resultMinMax4 + "ms");
         System.out.println("    Untersuchte Stellungen: " + numOfSearchedZustandMM4);
         System.out.println("    Zustände pro ms: " + zustandProMs4);
-        System.out.println("    Bester Zug: " + res.move);
+        System.out.println("    Bester Zug: " + Move.moveToString(res.move));
         System.out.println(" ");
 
 
@@ -259,7 +258,7 @@ public class Benchmark {
         System.out.println("    Gesamtlaufzeit Tiefe 2: " + resultAB2 + "ms (" + (resultAB2 - resultMinMax2) + "ms)");
         System.out.println("    Untersuchte Stellungen: " + numOfSearchedZustandAB2 + " (" + (numOfSearchedZustandAB2 - numOfSearchedZustandMM2) + ")");
         System.out.println("    Zustände pro ms: " + zustandProMsAB2 + " (" + (zustandProMsAB2 - zustandProMs2) + ")");
-        System.out.println("    Bester Zug: " + res.move);
+        System.out.println("    Bester Zug: " + Move.moveToString(res.move));
         System.out.println(" ");
 
 
@@ -277,7 +276,7 @@ public class Benchmark {
         System.out.println("    Gesamtlaufzeit Tiefe 3: " + resultAB3 + "ms (" + (resultAB3 - resultMinMax3) + "ms)");
         System.out.println("    Untersuchte Stellungen: " + numOfSearchedZustandAB3 + " (" + (numOfSearchedZustandAB3 - numOfSearchedZustandMM3) + ")");
         System.out.println("    Zustände pro ms: " + zustandProMsAB3 + " (" + -(zustandProMsAB3 - zustandProMs3) + ")");
-        System.out.println("    Bester Zug: " + res.move);
+        System.out.println("    Bester Zug: " + Move.moveToString(res.move));
         System.out.println(" ");
 
 
@@ -295,7 +294,7 @@ public class Benchmark {
         System.out.println("    Gesamtlaufzeit Tiefe 4: " + resultAB4 + "ms (" + (resultAB4 - resultMinMax4) + "ms)");
         System.out.println("    Untersuchte Stellungen: " + numOfSearchedZustandAB4 + " (" + (numOfSearchedZustandAB4 - numOfSearchedZustandMM4) + ")");
         System.out.println("    Zustände pro ms: " + zustandProMsAB4 + " (" + (zustandProMsAB4 - zustandProMs4) + ")");
-        System.out.println("    Bester Zug: " + res.move);
+        System.out.println("    Bester Zug: " + Move.moveToString(res.move));
         System.out.println(" ");
 
     }
@@ -332,7 +331,7 @@ public class Benchmark {
         System.out.println("Bewertungsfunktion");
         System.out.println("    10000 Iterationen: " + resultBewertungsfunktion + "ms");
         System.out.println("    Durchschnittliche Laufzeit: " + resultBewertungsfunktion / 10000 + "ms");
-        System.out.println("    Bester Zug: " + res.move);
+        System.out.println("    Bester Zug: " + Move.moveToString(res.move));
         System.out.println(" ");
 
 
@@ -353,7 +352,7 @@ public class Benchmark {
         System.out.println("    Gesamtlaufzeit Tiefe 2: " + resultMinMax2 + "ms");
         System.out.println("    Untersuchte Stellungen: " + numOfSearchedZustandMM2);
         System.out.println("    Zustände pro ms: " + zustandProMs2);
-        System.out.println("    Bester Zug: " + res.move);
+        System.out.println("    Bester Zug: " + Move.moveToString(res.move));
         System.out.println(" ");
 
 
@@ -371,7 +370,7 @@ public class Benchmark {
         System.out.println("    Gesamtlaufzeit Tiefe 3: " + resultMinMax3 + "ms");
         System.out.println("    Untersuchte Stellungen: " + numOfSearchedZustandMM3);
         System.out.println("    Zustände pro ms: " + zustandProMs3);
-        System.out.println("    Bester Zug: " + res.move);
+        System.out.println("    Bester Zug: " + Move.moveToString(res.move));
         System.out.println(" ");
 
 
@@ -389,7 +388,7 @@ public class Benchmark {
         System.out.println("    Gesamtlaufzeit Tiefe 4: " + resultMinMax4 + "ms");
         System.out.println("    Untersuchte Stellungen: " + numOfSearchedZustandMM4);
         System.out.println("    Zustände pro ms: " + zustandProMs4);
-        System.out.println("    Bester Zug: " + res.move);
+        System.out.println("    Bester Zug: " + Move.moveToString(res.move));
         System.out.println(" ");
 
 
@@ -409,7 +408,7 @@ public class Benchmark {
         System.out.println("    Gesamtlaufzeit Tiefe 2: " + resultAB2 + "ms (" + (resultAB2 - resultMinMax2) + "ms)");
         System.out.println("    Untersuchte Stellungen: " + numOfSearchedZustandAB2 + " (" + (numOfSearchedZustandAB2 - numOfSearchedZustandMM2) + ")");
         System.out.println("    Zustände pro ms: " + zustandProMsAB2 + " (" + (zustandProMsAB2 - zustandProMs2) + ")");
-        System.out.println("    Bester Zug: " + res.move);
+        System.out.println("    Bester Zug: " + Move.moveToString(res.move));
         System.out.println(" ");
 
 
@@ -427,7 +426,7 @@ public class Benchmark {
         System.out.println("    Gesamtlaufzeit Tiefe 3: " + resultAB3 + "ms (" + (resultAB3 - resultMinMax3) + "ms)");
         System.out.println("    Untersuchte Stellungen: " + numOfSearchedZustandAB3 + " (" + (numOfSearchedZustandAB3 - numOfSearchedZustandMM3) + ")");
         System.out.println("    Zustände pro ms: " + zustandProMsAB3 + " (" + -(zustandProMsAB3 - zustandProMs3) + ")");
-        System.out.println("    Bester Zug: " + res.move);
+        System.out.println("    Bester Zug: " + Move.moveToString(res.move));
         System.out.println(" ");
 
 
@@ -445,7 +444,7 @@ public class Benchmark {
         System.out.println("    Gesamtlaufzeit Tiefe 4: " + resultAB4 + "ms (" + (resultAB4 - resultMinMax4) + "ms)");
         System.out.println("    Untersuchte Stellungen: " + numOfSearchedZustandAB4 + " (" + (numOfSearchedZustandAB4 - numOfSearchedZustandMM4) + ")");
         System.out.println("    Zustände pro ms: " + zustandProMsAB4 + " (" + (zustandProMsAB4 - zustandProMs4) + ")");
-        System.out.println("    Bester Zug: " + res.move);
+        System.out.println("    Bester Zug: " + Move.moveToString(res.move));
         System.out.println(" ");
 
 
