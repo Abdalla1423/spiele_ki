@@ -1,3 +1,5 @@
+import org.junit.jupiter.api.Assertions;
+
 import java.util.ArrayList;
 
 public class Game {
@@ -96,6 +98,14 @@ public class Game {
 
         return bestMove;
     }
+
+    public static String getMove(String b) {
+        Board board = new Board(b);
+        MoveEvaluation res = Game.iterativeDeepening(board, 3, true);
+        return Move.moveToString(res.move);
+    }
+
+
     public static void main(String[] args) {
         Board startBoard = new Board("b01b0b0b0b0/1b0b01b01b01/3b01b02/2b05/8/2r0r01rr2/1r04r01/r0r0r0r0r0r0 r");
         int maxDepth = 1;

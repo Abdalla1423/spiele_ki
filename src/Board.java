@@ -58,21 +58,25 @@ public class Board {
     }
 
     Player getplayeratpos(int pos) {
-        long number = 1;
-        number = number << (pos - 1);
+        long number = 1L << (pos - 1);
 
-        if ((number & blauersteebene) == number) {
-            if ((number & blauzweiteebene) == number) {
+        boolean isBlueFirstLevel = (number & blauersteebene) != 0;
+        boolean isRedFirstLevel = (number & rotersteebene) != 0;
+        boolean isBlueSecondLevel = (number & blauzweiteebene) != 0;
+        boolean isRedSecondLevel = (number & rotzweiteebene) != 0;
+
+        if (isBlueFirstLevel) {
+            if (isBlueSecondLevel) {
                 return Player.BB;
-            } else if ((number & rotzweiteebene) == number) {
+            } else if (isRedSecondLevel) {
                 return Player.BR;
             } else {
                 return Player.B;
             }
-        } else if ((number & rotersteebene) == number) {
-            if ((number & blauzweiteebene) == number) {
+        } else if (isRedFirstLevel) {
+            if (isBlueSecondLevel) {
                 return Player.RB;
-            } else if ((number & rotzweiteebene) == number) {
+            } else if (isRedSecondLevel) {
                 return Player.RR;
             } else {
                 return Player.R;
@@ -81,6 +85,7 @@ public class Board {
             return Player.EMPTY;
         }
     }
+
 
     public static String fieldToString (int field) {
         String res = "";
