@@ -1,6 +1,7 @@
 import org.junit.jupiter.api.Assertions;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Game {
     //gibt Player R zurück, wenn rot gewonnen hat; Player B zurück, wenn blau gewonnen hat; Player EMPTY zurück, wenn noch
@@ -39,9 +40,12 @@ public class Game {
         return Math.max(4, Math.min(6, (int) time));
     }
 
-    private static boolean useAlphaBeta = false; // Change this to switch between algorithms
+    private static boolean useAlphaBeta = true; // Change this to switch between algorithms
 
     public static long numOfSearchedZustand = 0;
+
+    static int[][] bestmovepfad = new int[5][];
+    static int[] alphabetacutoffmove = new int[2];
 
     public static MoveEvaluation iterativeDeepening(Board startBoard, int maxDepth, boolean useAlphaBeta) {
         /*MoveEvaluation bestMoveEvaluation = new MoveEvaluation(0, "");
@@ -54,18 +58,37 @@ public class Game {
         MoveEvaluation bestMoveEvaluation = new MoveEvaluation(0, new int[2]);
         for (int depth = 1; depth <= maxDepth; depth++) {
 
+            if(depth >= 2) zuerstpfad = true;
+
             bestMoveEvaluation = minimaxAlphaBeta(startBoard, depth, Integer.MIN_VALUE, Integer.MAX_VALUE, useAlphaBeta, new int[2], new ArrayList<int[]>());
         }
+
+        //System.out.println(Arrays.deepToString(bestmovepfad));
         return bestMoveEvaluation;
     }
 
+    static boolean zuerstpfad = false;
+
     public static MoveEvaluation minimaxAlphaBeta(Board board, int depth, int alpha, int beta, boolean useAlphaBeta, int[] lastMove, ArrayList<int[]> currMoves) {
         if (depth == 0 || thisPlayerHasWon(board) != Player.EMPTY) {
+            zuerstpfad = false;
             return new MoveEvaluation(board.evaluate(currMoves.size() * 20), lastMove);
         }
 
         ArrayList<int[]> allPossibleMoves = Move.possibleMoves(board);
         MoveEvaluation bestMove = new MoveEvaluation(board.blauIstDran ? Integer.MIN_VALUE : Integer.MAX_VALUE, new int[2]);
+
+        if(zuerstpfad){
+            if(bestmovepfad[depth-1] != null) {
+                allPossibleMoves.remove(bestmovepfad[depth - 1]);
+                allPossibleMoves.add(0, bestmovepfad[depth - 1]);
+            }
+        }
+
+        if(allPossibleMoves.contains(alphabetacutoffmove)){
+            allPossibleMoves.remove(alphabetacutoffmove);
+            allPossibleMoves.add(0, alphabetacutoffmove);
+        }
 
         for (int[] move : allPossibleMoves) {
             Board nextBoard = new Board(board.blauzweiteebene, board.rotzweiteebene, board.blauersteebene, board.rotersteebene);
@@ -81,17 +104,20 @@ public class Game {
                 if (eval.evaluation > bestMove.evaluation) {
                     bestMove.evaluation = eval.evaluation;
                     bestMove.move = move;
+                    bestmovepfad[depth-1] = move;
                 }
                 alpha = Math.max(alpha, eval.evaluation);
             } else {
                 if (eval.evaluation < bestMove.evaluation) {
                     bestMove.evaluation = eval.evaluation;
                     bestMove.move = move;
+                    bestmovepfad[depth-1] = move;
                 }
                 beta = Math.min(beta, eval.evaluation);
             }
 
             if (useAlphaBeta && beta <= alpha) {
+                alphabetacutoffmove = move;
                 break; // Alpha-beta cut-off
             }
         }
