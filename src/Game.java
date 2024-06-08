@@ -2,6 +2,8 @@ import org.junit.jupiter.api.Assertions;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public class Game {
     //gibt Player R zurück, wenn rot gewonnen hat; Player B zurück, wenn blau gewonnen hat; Player EMPTY zurück, wenn noch
@@ -45,7 +47,7 @@ public class Game {
     public static long numOfSearchedZustand = 0;
 
     static int[][] bestmovepfad = new int[5][];
-    static int[] alphabetacutoffmove = new int[2];
+    static HashMap<Integer, int[]> alphabetacutoffmove = new LinkedHashMap<>();
 
     public static MoveEvaluation iterativeDeepening(Board startBoard, int maxDepth, boolean useAlphaBeta) {
         /*MoveEvaluation bestMoveEvaluation = new MoveEvaluation(0, "");
@@ -64,6 +66,7 @@ public class Game {
         }
 
         //System.out.println(Arrays.deepToString(bestmovepfad));
+        alphabetacutoffmove = new LinkedHashMap<>();
         return bestMoveEvaluation;
     }
 
@@ -83,11 +86,9 @@ public class Game {
                 allPossibleMoves.remove(bestmovepfad[depth - 1]);
                 allPossibleMoves.add(0, bestmovepfad[depth - 1]);
             }
-        }
-
-        if(allPossibleMoves.contains(alphabetacutoffmove)){
-            allPossibleMoves.remove(alphabetacutoffmove);
-            allPossibleMoves.add(0, alphabetacutoffmove);
+        }if(allPossibleMoves.contains(alphabetacutoffmove.get(depth))){
+            allPossibleMoves.remove(alphabetacutoffmove.get(depth));
+            allPossibleMoves.add(0, alphabetacutoffmove.get(depth));
         }
 
         for (int[] move : allPossibleMoves) {
@@ -117,7 +118,7 @@ public class Game {
             }
 
             if (useAlphaBeta && beta <= alpha) {
-                alphabetacutoffmove = move;
+                alphabetacutoffmove.put(depth, move);
                 break; // Alpha-beta cut-off
             }
         }
