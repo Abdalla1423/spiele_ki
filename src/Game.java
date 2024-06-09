@@ -140,12 +140,20 @@ public class Game {
             allPossibleMoves.add(0, alphabetacutoffmove.get(depth));
         }
 
+        int frompo = bestmovepfad[(maxdepth-depth)*2];
+        int topo = bestmovepfad[(maxdepth-depth)*2+1];
+        int z2 = 0;
+
         if(bestmovepfad[(maxdepth-depth)*2] != 0){
             allPossibleMoves.add(0, new int[]{bestmovepfad[(maxdepth-depth)*2], bestmovepfad[(maxdepth-depth)*2+1]});
             bestmovepfad[(maxdepth-depth)*2] = 0;
         }
 
         for (int[] moves : allPossibleMoves) {
+            if(moves[0] == frompo && moves[1] == topo & z2!= 0) {
+
+            }else{
+            z2++;
             int[] move = new int[20];
             move[0] = moves[0];
             move[1] = moves[1];
@@ -187,7 +195,7 @@ public class Game {
                 alphabetacutoffmove.put(depth, move);
                 break; // Alpha-beta cut-off
             }
-        }
+        }}
 
         return bestMove;
     }
