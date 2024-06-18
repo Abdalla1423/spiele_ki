@@ -82,7 +82,8 @@ public class Game {
     public static long numOfSearchedZustand = 0;
     static HashMap<Integer, int[]> alphabetacutoffmove = new LinkedHashMap<>();
 
-    static  int maxdepth;
+    static  int maxdepth; // zu currentdepth umbennenen
+    static HashMap<BoardDepthKey, MoveEvaluation> transpositionTable = new HashMap<>();
 
     public static MoveEvaluation iterativeDeepening(Board startBoard, int maxDepth, boolean useAlphaBeta) {
         /*MoveEvaluation bestMoveEvaluation = new MoveEvaluation(0, "");
@@ -94,7 +95,6 @@ public class Game {
         numOfSearchedZustand = 0;
         MoveEvaluation bestMoveEvaluation = new MoveEvaluation(0, new int[20]);
         for (int depth = 1; depth <= maxDepth; depth++) {
-
             maxdepth = depth;
             bestMoveEvaluation = minimaxAlphaBeta(startBoard, depth, Integer.MIN_VALUE, Integer.MAX_VALUE, useAlphaBeta, new int[20], new ArrayList<int[]>());
             MoveEvaluation finalBestMoveEvaluation = bestMoveEvaluation;
@@ -171,8 +171,16 @@ public class Game {
             nextBoard.updateBoard(move[0], move[1]);
             nextBoard.blauIstDran = !board.blauIstDran;
             currMoves.add(move);
-            MoveEvaluation eval = minimaxAlphaBeta(nextBoard, depth - 1, alpha, beta,  useAlphaBeta, move, currMoves);
+            MoveEvaluation eval;
 
+            // Transpositiontable
+            BoardDepthKey key = new BoardDepthKey(board, depth);
+            if (transpositionTable.containsKey(key)) {
+                // System.out.println("USED TRANSITION TABLE");
+                eval = transpositionTable.get(key);
+            } else {
+                eval = minimaxAlphaBeta(nextBoard, depth - 1, alpha, beta,  useAlphaBeta, move, currMoves);
+            }
             numOfSearchedZustand++;
             currMoves.remove(currMoves.size()-1);
 
@@ -197,6 +205,9 @@ public class Game {
             }
         }}
 
+        // Transpositiontable
+        transpositionTable.put(new BoardDepthKey(board, depth), bestMove);
+
         return bestMove;
     }
 
@@ -208,9 +219,8 @@ public class Game {
 
     public static void main(String[] args) {
         Board startBoard = new Board("b01b0b0b0b0/1b0b01b01b01/3b01b02/2b05/8/2r0r01rr2/1r04r01/r0r0r0r0r0r0 r");
-        int maxDepth = 1;
-        MoveEvaluation bestMoveEvaluation = iterativeDeepening(startBoard, maxDepth, useAlphaBeta);
-        System.out.println("Best move: " + bestMoveEvaluation.move + " with value: " + bestMoveEvaluation.evaluation);
+        MoveEvaluation bestMoveEvaluation = iterativeDeepening(startBoard, 5, useAlphaBeta);
+        System.out.println("Best move: " + Move.moveToString(bestMoveEvaluation.move) + " with value: " + bestMoveEvaluation.evaluation);
     }
 }
 
@@ -221,5 +231,29 @@ class MoveEvaluation {
     MoveEvaluation(int evaluation, int[] move) {
         this.evaluation = evaluation;
         this.move = move;
+    }
+}
+
+class BoardDepthKey {
+    Board board;
+    int depth;
+
+    BoardDepthKey(Board board, int depth) {
+        this.board = board;
+        this.depth = depth;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BoardDepthKey key = (BoardDepthKey) o;
+        return this.depth == key.depth && Objects.equals(board, key.board);
+    }
+
+    // Override hashCode method
+    @Override
+    public int hashCode() {
+        return Objects.hash(depth, board);
     }
 }
