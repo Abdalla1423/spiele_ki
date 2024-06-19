@@ -97,12 +97,9 @@ public class Game {
         for (int depth = 1; depth <= maxDepth; depth++) {
             maxdepth = depth;
             bestMoveEvaluation = minimaxAlphaBeta(startBoard, depth, Integer.MIN_VALUE, Integer.MAX_VALUE, useAlphaBeta, new int[20], new ArrayList<int[]>());
-            MoveEvaluation finalBestMoveEvaluation = bestMoveEvaluation;
 
-            linkedmoves = linkedmoves.stream().filter(x -> x[19] == finalBestMoveEvaluation.evaluation).toList();
-            var bestmovepfadtrash = linkedmoves.stream().filter(i -> Arrays.toString(i).contains("" + finalBestMoveEvaluation.move[0]
-                    + ", " + finalBestMoveEvaluation.move[1])).findFirst().get();
-
+            //Umdrehen des Arrays damit Züge in richtiger Reihenfolge
+            int[] bestmovepfadtrash = bestMoveEvaluation.move;
             int z = 0;
             for(int i = bestmovepfadtrash.length-2; i > 0; i--){
                 if(bestmovepfadtrash[i] != 0 ){
@@ -112,22 +109,20 @@ public class Game {
                     z+=2;
                 }
             }
-            linkedmoves = new LinkedList<>();
+
+            bestMoveEvaluation.move[0] = bestmovepfad[0];
+            bestMoveEvaluation.move[1] = bestmovepfad[1];
+
         }
 
         return bestMoveEvaluation;
     }
 
-
     static int[] bestmovepfad = new int[20];
-    static List<int[]> linkedmoves = new ArrayList<>();
 
     public static MoveEvaluation minimaxAlphaBeta(Board board, int depth, int alpha, int beta, boolean useAlphaBeta, int[] lastMove, ArrayList<int[]> currMoves) {
         if (depth == 0 || thisPlayerHasWon(board) != Player.EMPTY) {
             int evaluation = board.evaluate(currMoves.size() * 20);
-            lastMove[19] = evaluation;
-
-            linkedmoves.add(lastMove);
 
             return new MoveEvaluation(evaluation, lastMove);
         }
@@ -151,59 +146,59 @@ public class Game {
 
         for (int[] moves : allPossibleMoves) {
             if(moves[0] == frompo && moves[1] == topo & z2!= 0) {
-
+                //Zug war der beste zug und wurde an erster Stelle gesetzt
             }else{
-            z2++;
-            int[] move = new int[20];
-            move[0] = moves[0];
-            move[1] = moves[1];
-            int z = 0;
-            int z1 = 2;
-            if(lastMove[0] != 0){
-                while(lastMove[z] != 0){
-                    move[z1] = lastMove[z];
-                    move[z1+1] = lastMove[z+1];
-                    z += 2;
-                    z1 += 2;
+                z2++;
+                int[] move = new int[20];
+                move[0] = moves[0];
+                move[1] = moves[1];
+                int z = 0;
+                int z1 = 2;
+                if(lastMove[0] != 0){
+                    while(lastMove[z] != 0){
+                        move[z1] = lastMove[z];
+                        move[z1+1] = lastMove[z+1];
+                        z += 2;
+                        z1 += 2;
+                    }
                 }
-            }
-            Board nextBoard = new Board(board.blauzweiteebene, board.rotzweiteebene, board.blauersteebene, board.rotersteebene);
-            nextBoard.updateBoard(move[0], move[1]);
-            nextBoard.blauIstDran = !board.blauIstDran;
-            currMoves.add(move);
-            MoveEvaluation eval;
+                Board nextBoard = new Board(board.blauzweiteebene, board.rotzweiteebene, board.blauersteebene, board.rotersteebene);
+                nextBoard.updateBoard(move[0], move[1]);
+                nextBoard.blauIstDran = !board.blauIstDran;
+                currMoves.add(move);
+                MoveEvaluation eval;
 
-            // Transpositiontable
-            BoardDepthKey key = new BoardDepthKey(board, depth);
-            if (transpositionTable.containsKey(key)) {
-                // System.out.println("USED TRANSITION TABLE");
-                eval = transpositionTable.get(key);
-            } else {
-                eval = minimaxAlphaBeta(nextBoard, depth - 1, alpha, beta,  useAlphaBeta, move, currMoves);
-            }
-            numOfSearchedZustand++;
-            currMoves.remove(currMoves.size()-1);
-
-            if (board.blauIstDran) {
-                if (eval.evaluation > bestMove.evaluation) {
-                    bestMove.evaluation = eval.evaluation;
-                    bestMove.move = move;
-
+                // Transpositiontable
+                BoardDepthKey key = new BoardDepthKey(board, depth);
+                if (transpositionTable.containsKey(key)) {
+                    // System.out.println("USED TRANSITION TABLE");
+                    eval = transpositionTable.get(key);
+                } else {
+                    eval = minimaxAlphaBeta(nextBoard, depth - 1, alpha, beta,  useAlphaBeta, move, currMoves);
                 }
-                alpha = Math.max(alpha, eval.evaluation);
-            } else {
-                if (eval.evaluation < bestMove.evaluation) {
-                    bestMove.evaluation = eval.evaluation;
-                    bestMove.move = move;
-                }
-                beta = Math.min(beta, eval.evaluation);
-            }
+                numOfSearchedZustand++;
+                currMoves.remove(currMoves.size()-1);
 
-            if (useAlphaBeta && beta <= alpha) {
-                alphabetacutoffmove.put(depth, move);
-                break; // Alpha-beta cut-off
-            }
-        }}
+                if (board.blauIstDran) {
+                    if (eval.evaluation > bestMove.evaluation) {
+                        bestMove.evaluation = eval.evaluation;
+                        bestMove.move = eval.move;
+
+                    }
+                    alpha = Math.max(alpha, eval.evaluation);
+                } else {
+                    if (eval.evaluation < bestMove.evaluation) {
+                        bestMove.evaluation = eval.evaluation;
+                        bestMove.move = eval.move;
+                    }
+                    beta = Math.min(beta, eval.evaluation);
+                }
+
+                if (useAlphaBeta && beta <= alpha) {
+                    alphabetacutoffmove.put(depth, move);
+                    break; // Alpha-beta cut-off
+                }
+            }}
 
         // Transpositiontable
         transpositionTable.put(new BoardDepthKey(board, depth), bestMove);
