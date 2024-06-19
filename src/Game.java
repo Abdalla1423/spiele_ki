@@ -43,6 +43,9 @@ public class Game {
 
     public static long numOfSearchedZustand = 0;
 
+    static HashMap<BoardDepthKey, MoveEvaluation> transpositionTable = new HashMap<>();
+
+
     public static MoveEvaluation iterativeDeepening(Board startBoard, int maxDepth, boolean useAlphaBeta) {
         /*MoveEvaluation bestMoveEvaluation = new MoveEvaluation(0, "");
         bestMoveEvaluation = minimaxAlphaBeta(startBoard, 5, Integer.MIN_VALUE, Integer.MAX_VALUE, useAlphaBeta, "");
@@ -72,7 +75,16 @@ public class Game {
             nextBoard.updateBoard(move[0], move[1]);
             nextBoard.blauIstDran = !board.blauIstDran;
             currMoves.add(move);
-            MoveEvaluation eval = minimaxAlphaBeta(nextBoard, depth - 1, alpha, beta,  useAlphaBeta, move, currMoves);
+            MoveEvaluation eval;
+
+            // Transpositiontable
+            BoardDepthKey key = new BoardDepthKey(board, depth);
+            if (transpositionTable.containsKey(key)) {
+                System.out.println("USED TRANSITION TABLE");
+                eval = transpositionTable.get(key);
+            } else {
+                eval = minimaxAlphaBeta(nextBoard, depth - 1, alpha, beta,  useAlphaBeta, move, currMoves);
+            }
 
             numOfSearchedZustand++;
             currMoves.remove(currMoves.size()-1);
@@ -95,6 +107,8 @@ public class Game {
                 break; // Alpha-beta cut-off
             }
         }
+
+        transpositionTable.put(new BoardDepthKey(board, depth), bestMove);
 
         return bestMove;
     }
@@ -121,5 +135,29 @@ class MoveEvaluation {
     MoveEvaluation(int evaluation, int[] move) {
         this.evaluation = evaluation;
         this.move = move;
+    }
+}
+
+class BoardDepthKey {
+    Board board;
+    int depth;
+
+    BoardDepthKey(Board board, int depth) {
+        this.board = board;
+        this.depth = depth;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BoardDepthKey key = (BoardDepthKey) o;
+        return this.depth == key.depth && Objects.equals(board, key.board);
+    }
+
+    // Override hashCode method
+    @Override
+    public int hashCode() {
+        return Objects.hash(depth, board);
     }
 }

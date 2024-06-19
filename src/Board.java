@@ -270,4 +270,18 @@ public class Board {
         return res.toString();
     }
 
+     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Board board = (Board) o;
+        return this.blauzweiteebene == board.blauzweiteebene && this.blauersteebene == board.blauersteebene && this.rotzweiteebene == board.rotzweiteebene && this.rotersteebene == board.rotersteebene;
+    }
+
+    // Override hashCode method
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.blauzweiteebene, this.blauersteebene, this.rotzweiteebene, this.rotersteebene);
+    }
+
 }
