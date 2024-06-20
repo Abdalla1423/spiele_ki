@@ -72,7 +72,7 @@ public class Game {
     }
 
     public static int timeToDepth(double time) {
-        return Math.max(4, Math.min(6, (int) time));
+        return Math.max(5, Math.min(6, (int) time / 10));
     }
 
     private static boolean useAlphaBeta = true; // Change this to switch between algorithms
@@ -90,18 +90,56 @@ public class Game {
         bestMoveEvaluation = minimaxAlphaBeta(startBoard, 5, Integer.MIN_VALUE, Integer.MAX_VALUE, useAlphaBeta, "");
         System.out.println("Anzhal Zustände: " + numOfSearchedZustand);
         return bestMoveEvaluation;
-
          */
+        int initialWindowSize = 50;
+        int windowSizeIncrement = 70;
+        int initialEvaluation = 0;
+
+
         numOfSearchedZustand = 0;
         MoveEvaluation bestMoveEvaluation = new MoveEvaluation(0, new int[20]);
         for (int depth = 1; depth <= maxDepth; depth++) {
             maxdepth = depth;
-            bestMoveEvaluation = minimaxAlphaBeta(startBoard, depth, Integer.MIN_VALUE, Integer.MAX_VALUE, useAlphaBeta, new int[20], new ArrayList<int[]>());
+
+            int alphaAspirationWindow = initialEvaluation - initialWindowSize;
+            int betaAspirationWindow = initialEvaluation + initialWindowSize;
+
+            // Try the initial window size
+            bestMoveEvaluation = minimaxAlphaBeta(startBoard, depth, alphaAspirationWindow, betaAspirationWindow, useAlphaBeta, new int[20], new ArrayList<int[]>());
+            initialEvaluation = bestMoveEvaluation.evaluation;
+
+            //System.out.println("Alpha: " + alphaAspirationWindow + ", Beta: " + betaAspirationWindow + ", Evaluation: " + bestMoveEvaluation.evaluation + ", Move: " + Move.moveToString(bestMoveEvaluation.move));
+
+            //initialEvaluation = bestMoveEvaluation.evaluation;
+
+            // Check if the result is outside the window
+            if (bestMoveEvaluation.evaluation <= alphaAspirationWindow || bestMoveEvaluation.evaluation >= betaAspirationWindow) {
+                // Increase the window size and try again
+                alphaAspirationWindow = initialEvaluation - (initialWindowSize + windowSizeIncrement);
+                betaAspirationWindow = initialEvaluation + (initialWindowSize + windowSizeIncrement);
+
+                bestMoveEvaluation = minimaxAlphaBeta(startBoard, depth, alphaAspirationWindow, betaAspirationWindow, useAlphaBeta, new int[20], new ArrayList<int[]>());
+                initialEvaluation = bestMoveEvaluation.evaluation;
+                //System.out.println("Alpha: " + alphaAspirationWindow + ", Beta: " + betaAspirationWindow + ", Evaluation: " + bestMoveEvaluation.evaluation + ", Move: " + Move.moveToString(bestMoveEvaluation.move));
+
+
+                // If still outside the window, fall back to normal alpha-beta
+                if (bestMoveEvaluation.evaluation <= alphaAspirationWindow || bestMoveEvaluation.evaluation >= betaAspirationWindow) {
+                    bestMoveEvaluation = minimaxAlphaBeta(startBoard, depth, Integer.MIN_VALUE, Integer.MAX_VALUE, useAlphaBeta, new int[20], new ArrayList<int[]>());
+                    initialEvaluation = bestMoveEvaluation.evaluation;
+                    //System.out.println("Alpha: " + alphaAspirationWindow + ", Beta: " + betaAspirationWindow + ", Evaluation: " + bestMoveEvaluation.evaluation + ", Move: " + Move.moveToString(bestMoveEvaluation.move));
+                }
+            }
+            //System.out.println("Alpha: " + alphaAspirationWindow + ", Beta: " + betaAspirationWindow + ", Evaluation: " + bestMoveEvaluation.evaluation + ", Move: " + Move.moveToString(bestMoveEvaluation.move));
+
+
+            // Update der anfänglichen Schätzung für die nächste Iterationstiefe
+
 
             //Umdrehen des Arrays damit Züge in richtiger Reihenfolge
             int[] bestmovepfadtrash = bestMoveEvaluation.move;
             int z = 0;
-            for(int i = bestmovepfadtrash.length-2; i > 0; i--){
+            for(int i = bestmovepfadtrash.length-2; i > 0; i--) {
                 if(bestmovepfadtrash[i] != 0 ){
                     bestmovepfad[z] = bestmovepfadtrash[i-1];
                     bestmovepfad[z+1] = bestmovepfadtrash[i];
@@ -145,7 +183,7 @@ public class Game {
         }
 
         for (int[] moves : allPossibleMoves) {
-            if(moves[0] == frompo && moves[1] == topo & z2!= 0) {
+            if (moves[0] == frompo && moves[1] == topo & z2!= 0) {
                 //Zug war der beste zug und wurde an erster Stelle gesetzt
             }else{
                 z2++;
@@ -169,9 +207,8 @@ public class Game {
                 MoveEvaluation eval;
 
                 // Transpositiontable
-                BoardDepthKey key = new BoardDepthKey(board, depth);
+                BoardDepthKey key = new BoardDepthKey(board, depth, alpha, beta);
                 if (transpositionTable.containsKey(key)) {
-                    // System.out.println("USED TRANSITION TABLE");
                     eval = transpositionTable.get(key);
                 } else {
                     eval = minimaxAlphaBeta(nextBoard, depth - 1, alpha, beta,  useAlphaBeta, move, currMoves);
@@ -198,10 +235,12 @@ public class Game {
                     alphabetacutoffmove.put(depth, move);
                     break; // Alpha-beta cut-off
                 }
-            }}
+            }
+        }
 
         // Transpositiontable
-        transpositionTable.put(new BoardDepthKey(board, depth), bestMove);
+        //System.out.println("Statements:" + depth + " " + alpha + " " + beta);
+        transpositionTable.put(new BoardDepthKey(board, depth, alpha, beta), bestMove);
 
         return bestMove;
     }
@@ -232,23 +271,27 @@ class MoveEvaluation {
 class BoardDepthKey {
     Board board;
     int depth;
+    int alpha;
+    int beta;
 
-    BoardDepthKey(Board board, int depth) {
+    BoardDepthKey(Board board, int depth, int alpha, int beta) {
         this.board = board;
         this.depth = depth;
+        this.alpha = alpha;
+        this.beta = beta;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        BoardDepthKey key = (BoardDepthKey) o;
-        return this.depth == key.depth && Objects.equals(board, key.board);
+        tests.BoardDepthKey key = (tests.BoardDepthKey) o;
+        return this.depth == key.depth && this.alpha == key.alpha && this.beta == key.beta && Objects.equals(board, key.board);
     }
 
     // Override hashCode method
     @Override
     public int hashCode() {
-        return Objects.hash(depth, board);
+        return Objects.hash(depth, board, alpha, beta);
     }
 }
