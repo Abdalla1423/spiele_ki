@@ -252,9 +252,10 @@ public class Game {
     }
 
     public static void main(String[] args) {
-        Board startBoard = new Board("b01b0b0b0b0/1b0b01b01b01/3b01b02/2b05/8/2r0r01rr2/1r04r01/r0r0r0r0r0r0 r");
-        MoveEvaluation bestMoveEvaluation = iterativeDeepening(startBoard, 5, useAlphaBeta);
-        System.out.println("Best move: " + Move.moveToString(bestMoveEvaluation.move) + " with value: " + bestMoveEvaluation.evaluation);
+        // Board startBoard = new Board("b01b0b0b0b0/1b0b01b01b01/3b01b02/2b05/8/2r0r01rr2/1r04r01/r0r0r0r0r0r0 r");
+        // MoveEvaluation bestMoveEvaluation = iterativeDeepening(startBoard, 5, useAlphaBeta);
+        String move = getMove("b01b0b0b0b0/1b0b01b01b01/3b01b02/2b05/8/2r0r01rr2/1r04r01/r0r0r0r0r0r0 r");
+        System.out.println("Best move: " + move );
     }
 }
 
@@ -285,7 +286,7 @@ class BoardDepthKey {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        tests.BoardDepthKey key = (tests.BoardDepthKey) o;
+        BoardDepthKey key = (BoardDepthKey) o;
         return this.depth == key.depth && this.alpha == key.alpha && this.beta == key.beta && Objects.equals(board, key.board);
     }
 
