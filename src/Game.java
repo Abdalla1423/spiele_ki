@@ -37,38 +37,44 @@ public class Game {
         return Player.EMPTY;
     }
 
-    public static double timeManagment(Board board) {
+    public static int timeManagment(Board board) {
         //abgelaufene Zeit herausfinden
         long time = TimeUnit.MILLISECONDS.toSeconds(currentTimeMillis() - starttime);
+        int numofplayers = board.numofPlayers();
         //early Game
-        if(time < 21){
-            if(board.numofPlayers() > 19){
+        if(time < 10){
+            return 4;
+        }    
+        else if(time < 21){
+            if(numofplayers > 19){
                 //wenig Zeit
+                return 3;
             }else{
-
+                return 5;
             }
         }
         //Middle Game
         else if(time < 91){
-            if(board.numofPlayers() > 19){
-                //wenig Zeit
+            if(numofplayers > 19){
+                return 4;
             }else{
-
+                return 7;
             }
         }
         //end Game
         else if(time < 110){
-            if(board.numofPlayers() > 10){
+            if(numofplayers > 10){
                 //wenig Zeit
+                return 2;
             }else{
-
+                return 3;
             }
         }
         //almost no time
         else{
             //wenig Zeit
+            return 1;
         }
-        return 0.0;
     }
 
     public static int timeToDepth(double time) {
@@ -91,6 +97,10 @@ public class Game {
         System.out.println("Anzhal Zustände: " + numOfSearchedZustand);
         return bestMoveEvaluation;
          */
+
+        //maxdepth soll vom timemanagement ausgewählt werden
+        maxDepth = timeManagment(startBoard);
+        
         int initialWindowSize = 50;
         int windowSizeIncrement = 70;
         int initialEvaluation = 0;
