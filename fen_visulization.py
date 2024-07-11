@@ -38,35 +38,6 @@ def fen_to_board(fen):
             i += 1
 
     return board
-    # Split the input string by '/' to separate rows
-    rows = fen.split('/')
-
-    # Initialize an empty 8x8 board
-    board = [['' for _ in range(8)] for _ in range(8)]
-
-    # Process each row
-    for row_idx, row in enumerate(rows):
-        col_idx = 0  # Start at the beginning of each row
-        i = 0  # Index for iterating through the characters in the row string
-        while i < len(row):
-            char = row[i]
-            if char.isdigit():
-                # If the character is a digit, it represents empty spaces
-                num_empty_spaces = int(char)
-                for _ in range(num_empty_spaces):
-                    board[row_idx][col_idx] = ''
-                    col_idx += 1
-            elif char == 'b' or char == 'r':
-                # If the character is 'b' or 'r', check for stacked pieces
-                if i + 1 < len(row) and row[i + 1] in 'br':
-                    board[row_idx][col_idx] = char + row[i + 1]
-                    i += 1  # Skip the next character since it's part of the stack
-                else:
-                    board[row_idx][col_idx] = char
-                col_idx += 1
-            i += 1
-
-    return board
 
 def draw_board(board, cell_size=50, image_number=0):
     # Create a blank image with space for labels
@@ -115,12 +86,14 @@ def draw_board(board, cell_size=50, image_number=0):
     # Draw the row and column labels
     font = ImageFont.load_default()
     for i in range(8):
-        # Draw row numbers
-        draw.text((5, (i + 1) * cell_size + cell_size / 3), str(i + 1), fill='black', font=font)
+        # Draw row numbers in increasing order from top to bottom
+        draw.text((5, (8 - i) * cell_size + cell_size / 3), str(i + 1), fill='black', font=font)
         # Draw column letters
         draw.text(((i + 1) * cell_size + cell_size / 3, 5), chr(ord('A') + i), fill='black', font=font)
-        # Save the image
+
+    # Save the image
     img.save(f'board_with_grid_{image_number}.jpg')
+    print(f'board_with_grid_{image_number}.jpg')
 
 def extract_board_states(file_path):
     board_states = []
@@ -132,21 +105,11 @@ def extract_board_states(file_path):
     return board_states
 
 def main(file_path):
-    # board_fen_strings = extract_board_states(file_path)
-    # for idx, fen_string in enumerate(board_fen_strings):
-        # board = fen_to_board(fen_string[:-2])
-        # draw_board(board, image_number=idx)
-    board = fen_to_board("b01b0b0b0b0/1b0b01b01b01/3b01b02/2b05/8/2r0r01rr2/1r04r01/r0r0r0r0r0r0")
-    draw_board(board, 200)
+    board_fen_strings = extract_board_states(file_path)
+    for idx, fen_string in enumerate(board_fen_strings):
+        board = fen_to_board(fen_string[:-2])
+        draw_board(board, image_number=idx)
 
-#fen_string = "6/1bb1b0bbb0b01/r02b04/2b01b0b02/2r02r02/1r02rrr02/6rr1/2r01r01"
-#board = fen_to_board(fen_string)
-#draw_board(board)
-# Replace 'your_file.txt' with the path to your text file
-#file_path = '../jump-sturdy-game-server/00361965.txt'
-# main(file_path)
-
-board = fen_to_board("b01b0b0b0b0/1b0b01b01b01/3b01b02/2b05/8/2r0r01rr2/1r04r01/r0r0r0r0r0r0")
+# Test the function
+board = fen_to_board("6/3b01b02/4bb3/1bb6/3rr1r02/8/4r03/6")
 draw_board(board)
-
-
