@@ -125,10 +125,6 @@ public class Move {
         }
 
         // Duplikate entfernen
-        Set<int[]> set = new HashSet<>(res);
-        res.clear();
-        res.addAll(set);
-
         return res;
     }
 

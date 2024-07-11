@@ -183,13 +183,6 @@ public class Board {
     }
 
     int evaluate(int depth) {
-        if (Move.possibleMoves(this).isEmpty()){
-            if (this.blauIstDran) {
-                return -10000 + depth;
-            } else {
-                return 10000 - depth;
-            }
-        }
 
         int result=0;
         for (int i = 1; i < 9; i++) {

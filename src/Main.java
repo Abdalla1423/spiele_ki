@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args) {
-        Board board = new Board("b0b0b0b0b0b0/1b0b0b0b0b0b01/8/8/8/8/1r0r0r0r0r0r01/r0r0r0r0r0r0 b");
+        /*Board board = new Board("b0b0b0b0b0b0/1b0b0b0b0b0b01/8/8/8/8/1r0r0r0r0r0r01/r0r0r0r0r0r0 b");
         while (true) {
             System.out.println(board.boardToFEN());
             Player hasWon = Game.thisPlayerHasWon(board);
@@ -21,7 +21,8 @@ public class Main {
             System.out.println(curr);
             board.updateBoard(currentMove[0], currentMove[1]);
 
-             */
-        }
+
+        }*/
+
     }
 }

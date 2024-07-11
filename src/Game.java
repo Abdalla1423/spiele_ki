@@ -25,66 +25,34 @@ public class Game {
                 return Player.B;
             }
         }
-        //gucken, ob noch possibleMoves hat
-        if (Move.possibleMoves(board).isEmpty()) {
-            if (board.blauIstDran){
-                return Player.R;
-            } else {
-                return Player.B;
-            }
-        }
         //wenn noch niemand gewonnen hat
         return Player.EMPTY;
     }
 
-    public static int timeManagment(Board board) {
+    public static int timeManagment(Board board, long time) {
         //abgelaufene Zeit herausfinden
-        long time = TimeUnit.MILLISECONDS.toSeconds(currentTimeMillis() - starttime);
         int numofplayers = board.numofPlayers();
+        return 6;
         //early Game
-        if(time < 10){
-            return 4;
-        }    
-        else if(time < 21){
-            if(numofplayers > 19){
-                //wenig Zeit
-                return 3;
-            }else{
-                return 5;
-            }
+        /*if(numofplayers > 22){
+            return 5;
+        } else if(numofplayers > 20) {
+            return 6;
+        //Mid-Game
+        } else if(numofplayers > 18) {
+            return 7;
+        } else if(numofplayers > 16) {
+            return 7;
+        //End-Game
+        } else if(numofplayers > 14) {
+            return 6;
+        } else if(numofplayers > 12) {
+            return 5;
         }
-        //Middle Game
-        else if(time < 91){
-            if(numofplayers > 19){
-                return 4;
-            }else{
-                return 7;
-            }
-        }
-        //end Game
-        else if(time < 110){
-            if(numofplayers > 10){
-                //wenig Zeit
-                return 2;
-            }else{
-                return 3;
-            }
-        }
-        //almost no time
-        else{
-            //wenig Zeit
-            return 1;
-        }
+
+         */
     }
 
-    public static int timeToDepth(double time) {
-        return Math.max(5, Math.min(6, (int) time / 10));
-    }
-
-    private static boolean useAlphaBeta = true; // Change this to switch between algorithms
-
-    //starttime in currenttimemillis
-    static long starttime;
     public static long numOfSearchedZustand = 0;
     static HashMap<Integer, int[]> alphabetacutoffmove = new LinkedHashMap<>();
 
@@ -99,8 +67,7 @@ public class Game {
          */
 
         //maxdepth soll vom timemanagement ausgewählt werden
-        maxDepth = timeManagment(startBoard);
-        
+
         int initialWindowSize = 50;
         int windowSizeIncrement = 70;
         int initialEvaluation = 0;
@@ -169,13 +136,23 @@ public class Game {
     static int[] bestmovepfad = new int[20];
 
     public static MoveEvaluation minimaxAlphaBeta(Board board, int depth, int alpha, int beta, boolean useAlphaBeta, int[] lastMove, ArrayList<int[]> currMoves) {
+        int moveFactor = currMoves.size() * 20;
+        // jemand gewonnen
         if (depth == 0 || thisPlayerHasWon(board) != Player.EMPTY) {
-            int evaluation = board.evaluate(currMoves.size() * 20);
-
+            int evaluation = board.evaluate(moveFactor);
             return new MoveEvaluation(evaluation, lastMove);
         }
 
+        // keine Moves mehr
         ArrayList<int[]> allPossibleMoves = Move.possibleMoves(board);
+        if (allPossibleMoves.isEmpty()){
+            if (board.blauIstDran) {
+                return new MoveEvaluation(-10000 + moveFactor,lastMove);
+            } else {
+                return new MoveEvaluation(10000 - moveFactor, lastMove);
+            }
+        }
+
         MoveEvaluation bestMove = new MoveEvaluation(board.blauIstDran ? Integer.MIN_VALUE : Integer.MAX_VALUE, new int[20]);
 
         if(allPossibleMoves.contains(alphabetacutoffmove.get(depth))){
@@ -255,16 +232,17 @@ public class Game {
         return bestMove;
     }
 
-    public static String getMove(String b) {
+    public static String getMove(String b, int time) {
         Board board = new Board(b);
-        MoveEvaluation res = Game.iterativeDeepening(board, 5, true);
+        int maxDepth = timeManagment(board, time);
+        MoveEvaluation res = Game.iterativeDeepening(board, maxDepth, true);
         return Move.moveToString(res.move);
     }
 
     public static void main(String[] args) {
         // Board startBoard = new Board("b01b0b0b0b0/1b0b01b01b01/3b01b02/2b05/8/2r0r01rr2/1r04r01/r0r0r0r0r0r0 r");
         // MoveEvaluation bestMoveEvaluation = iterativeDeepening(startBoard, 5, useAlphaBeta);
-        String move = getMove("b01b0b0b0b0/1b0b01b01b01/3b01b02/2b05/8/2r0r01rr2/1r04r01/r0r0r0r0r0r0 r");
+        String move = getMove("b01b0b0b0b0/1b0b01b01b01/3b01b02/2b05/8/2r0r01rr2/1r04r01/r0r0r0r0r0r0 r", 100000);
         System.out.println("Best move: " + move );
     }
 }
