@@ -1,12 +1,7 @@
-import org.junit.jupiter.api.Assertions;
-
-import java.lang.reflect.Array;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.max;
-import static java.lang.System.currentTimeMillis;
 
 public class Game {
     //gibt Player R zurück, wenn rot gewonnen hat; Player B zurück, wenn blau gewonnen hat; Player EMPTY zurück, wenn noch
@@ -32,7 +27,7 @@ public class Game {
     public static int timeManagment(Board board, long time) {
         //abgelaufene Zeit herausfinden
         int numofplayers = board.numofPlayers();
-        return 6;
+        return 5;
         //early Game
         /*if(numofplayers > 22){
             return 5;
@@ -56,7 +51,7 @@ public class Game {
     public static long numOfSearchedZustand = 0;
     static HashMap<Integer, int[]> alphabetacutoffmove = new LinkedHashMap<>();
 
-    static  int maxdepth; // zu currentdepth umbennenen
+    static  int currentDepth; // zu currentdepth umbennenen
     static HashMap<BoardDepthKey, MoveEvaluation> transpositionTable = new HashMap<>();
 
     public static MoveEvaluation iterativeDeepening(Board startBoard, int maxDepth, boolean useAlphaBeta) {
@@ -76,14 +71,18 @@ public class Game {
         numOfSearchedZustand = 0;
         MoveEvaluation bestMoveEvaluation = new MoveEvaluation(0, new int[20]);
         for (int depth = 1; depth <= maxDepth; depth++) {
-            maxdepth = depth;
+            currentDepth = depth;
+            bestMoveEvaluation = minimaxAlphaBeta(startBoard, depth, Integer.MIN_VALUE, Integer.MAX_VALUE, useAlphaBeta, new int[20], new ArrayList<int[]>());
 
-            int alphaAspirationWindow = initialEvaluation - initialWindowSize;
+
+            /*int alphaAspirationWindow = initialEvaluation - initialWindowSize;
             int betaAspirationWindow = initialEvaluation + initialWindowSize;
 
             // Try the initial window size
             bestMoveEvaluation = minimaxAlphaBeta(startBoard, depth, alphaAspirationWindow, betaAspirationWindow, useAlphaBeta, new int[20], new ArrayList<int[]>());
             initialEvaluation = bestMoveEvaluation.evaluation;
+
+
 
             //System.out.println("Alpha: " + alphaAspirationWindow + ", Beta: " + betaAspirationWindow + ", Evaluation: " + bestMoveEvaluation.evaluation + ", Move: " + Move.moveToString(bestMoveEvaluation.move));
 
@@ -107,6 +106,8 @@ public class Game {
                     //System.out.println("Alpha: " + alphaAspirationWindow + ", Beta: " + betaAspirationWindow + ", Evaluation: " + bestMoveEvaluation.evaluation + ", Move: " + Move.moveToString(bestMoveEvaluation.move));
                 }
             }
+
+             */
             //System.out.println("Alpha: " + alphaAspirationWindow + ", Beta: " + betaAspirationWindow + ", Evaluation: " + bestMoveEvaluation.evaluation + ", Move: " + Move.moveToString(bestMoveEvaluation.move));
 
 
@@ -114,7 +115,7 @@ public class Game {
 
 
             //Umdrehen des Arrays damit Züge in richtiger Reihenfolge
-            int[] bestmovepfadtrash = bestMoveEvaluation.move;
+            /*int[] bestmovepfadtrash = bestMoveEvaluation.move;
             int z = 0;
             for(int i = bestmovepfadtrash.length-2; i > 0; i--) {
                 if(bestmovepfadtrash[i] != 0 ){
@@ -128,12 +129,16 @@ public class Game {
             bestMoveEvaluation.move[0] = bestmovepfad[0];
             bestMoveEvaluation.move[1] = bestmovepfad[1];
 
+             */
+
         }
+
+
 
         return bestMoveEvaluation;
     }
 
-    static int[] bestmovepfad = new int[20];
+    // static int[] bestmovepfad = new int[20];
 
     public static MoveEvaluation minimaxAlphaBeta(Board board, int depth, int alpha, int beta, boolean useAlphaBeta, int[] lastMove, ArrayList<int[]> currMoves) {
         int moveFactor = currMoves.size() * 20;
@@ -155,22 +160,24 @@ public class Game {
 
         MoveEvaluation bestMove = new MoveEvaluation(board.blauIstDran ? Integer.MIN_VALUE : Integer.MAX_VALUE, new int[20]);
 
-        if(allPossibleMoves.contains(alphabetacutoffmove.get(depth))){
+        /*if(allPossibleMoves.contains(alphabetacutoffmove.get(depth))){
             allPossibleMoves.remove(alphabetacutoffmove.get(depth));
             allPossibleMoves.add(0, alphabetacutoffmove.get(depth));
         }
 
-        int frompo = bestmovepfad[(maxdepth-depth)*2];
-        int topo = bestmovepfad[(maxdepth-depth)*2+1];
+        int frompo = bestmovepfad[(currentDepth -depth)*2];
+        int topo = bestmovepfad[(currentDepth -depth)*2+1];
         int z2 = 0;
 
-        if(bestmovepfad[(maxdepth-depth)*2] != 0){
-            allPossibleMoves.add(0, new int[]{bestmovepfad[(maxdepth-depth)*2], bestmovepfad[(maxdepth-depth)*2+1]});
-            bestmovepfad[(maxdepth-depth)*2] = 0;
+        if(bestmovepfad[(currentDepth -depth)*2] != 0){
+            allPossibleMoves.add(0, new int[]{bestmovepfad[(currentDepth -depth)*2], bestmovepfad[(currentDepth -depth)*2+1]});
+            bestmovepfad[(currentDepth -depth)*2] = 0;
         }
 
-        for (int[] moves : allPossibleMoves) {
-            if (moves[0] == frompo && moves[1] == topo & z2!= 0) {
+         */
+
+        for (int[] move : allPossibleMoves) {
+            /*if (moves[0] == frompo && moves[1] == topo & z2!= 0) {
                 //Zug war der beste zug und wurde an erster Stelle gesetzt
             }else{
                 z2++;
@@ -187,6 +194,8 @@ public class Game {
                         z1 += 2;
                     }
                 }
+
+             */
                 Board nextBoard = new Board(board.blauzweiteebene, board.rotzweiteebene, board.blauersteebene, board.rotersteebene);
                 nextBoard.updateBoard(move[0], move[1]);
                 nextBoard.blauIstDran = !board.blauIstDran;
@@ -194,7 +203,7 @@ public class Game {
                 MoveEvaluation eval;
 
                 // Transpositiontable
-                BoardDepthKey key = new BoardDepthKey(board, depth, alpha, beta);
+                BoardDepthKey key = new BoardDepthKey(board, depth);
                 if (transpositionTable.containsKey(key)) {
                     eval = transpositionTable.get(key);
                 } else {
@@ -223,11 +232,11 @@ public class Game {
                     break; // Alpha-beta cut-off
                 }
             }
-        }
+        // }
 
         // Transpositiontable
         //System.out.println("Statements:" + depth + " " + alpha + " " + beta);
-        transpositionTable.put(new BoardDepthKey(board, depth, alpha, beta), bestMove);
+        transpositionTable.put(new BoardDepthKey(board, depth), bestMove);
 
         return bestMove;
     }
@@ -260,14 +269,12 @@ class MoveEvaluation {
 class BoardDepthKey {
     Board board;
     int depth;
-    int alpha;
-    int beta;
 
-    BoardDepthKey(Board board, int depth, int alpha, int beta) {
+
+    BoardDepthKey(Board board, int depth) {
         this.board = board;
         this.depth = depth;
-        this.alpha = alpha;
-        this.beta = beta;
+
     }
 
     @Override
@@ -275,12 +282,12 @@ class BoardDepthKey {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         BoardDepthKey key = (BoardDepthKey) o;
-        return this.depth == key.depth && this.alpha == key.alpha && this.beta == key.beta && Objects.equals(board, key.board);
+        return this.depth == key.depth && Objects.equals(board, key.board);
     }
 
     // Override hashCode method
     @Override
     public int hashCode() {
-        return Objects.hash(depth, board, alpha, beta);
+        return Objects.hash(depth, board);
     }
 }
