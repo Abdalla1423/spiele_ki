@@ -68,17 +68,20 @@ public class Game {
 
         //maxdepth soll vom timemanagement ausgewählt werden
 
-        int initialWindowSize = 50;
+        /*int initialWindowSize = 50;
         int windowSizeIncrement = 70;
         int initialEvaluation = 0;
+
+         */
 
 
         numOfSearchedZustand = 0;
         MoveEvaluation bestMoveEvaluation = new MoveEvaluation(0, new int[20]);
         for (int depth = 1; depth <= maxDepth; depth++) {
             maxdepth = depth;
+            bestMoveEvaluation = minimaxAlphaBeta(startBoard, depth, Integer.MIN_VALUE, Integer.MAX_VALUE, useAlphaBeta, new int[20], new ArrayList<int[]>());
 
-            int alphaAspirationWindow = initialEvaluation - initialWindowSize;
+            /*int alphaAspirationWindow = initialEvaluation - initialWindowSize;
             int betaAspirationWindow = initialEvaluation + initialWindowSize;
 
             // Try the initial window size
@@ -107,6 +110,8 @@ public class Game {
                     //System.out.println("Alpha: " + alphaAspirationWindow + ", Beta: " + betaAspirationWindow + ", Evaluation: " + bestMoveEvaluation.evaluation + ", Move: " + Move.moveToString(bestMoveEvaluation.move));
                 }
             }
+
+             */
             //System.out.println("Alpha: " + alphaAspirationWindow + ", Beta: " + betaAspirationWindow + ", Evaluation: " + bestMoveEvaluation.evaluation + ", Move: " + Move.moveToString(bestMoveEvaluation.move));
 
 
