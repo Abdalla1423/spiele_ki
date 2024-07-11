@@ -199,7 +199,7 @@ public class Game {
                 MoveEvaluation eval;
 
                 // Transpositiontable
-                BoardDepthKey key = new BoardDepthKey(board, depth, alpha, beta);
+                BoardDepthKey key = new BoardDepthKey(board, depth);
                 if (transpositionTable.containsKey(key)) {
                     eval = transpositionTable.get(key);
                 } else {
@@ -232,7 +232,7 @@ public class Game {
 
         // Transpositiontable
         //System.out.println("Statements:" + depth + " " + alpha + " " + beta);
-        transpositionTable.put(new BoardDepthKey(board, depth, alpha, beta), bestMove);
+        transpositionTable.put(new BoardDepthKey(board, depth), bestMove);
 
         return bestMove;
     }
@@ -265,14 +265,12 @@ class MoveEvaluation {
 class BoardDepthKey {
     Board board;
     int depth;
-    int alpha;
-    int beta;
 
-    BoardDepthKey(Board board, int depth, int alpha, int beta) {
+
+    BoardDepthKey(Board board, int depth) {
         this.board = board;
         this.depth = depth;
-        this.alpha = alpha;
-        this.beta = beta;
+
     }
 
     @Override
@@ -280,12 +278,12 @@ class BoardDepthKey {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         BoardDepthKey key = (BoardDepthKey) o;
-        return this.depth == key.depth && this.alpha == key.alpha && this.beta == key.beta && Objects.equals(board, key.board);
+        return this.depth == key.depth && Objects.equals(board, key.board);
     }
 
     // Override hashCode method
     @Override
     public int hashCode() {
-        return Objects.hash(depth, board, alpha, beta);
+        return Objects.hash(depth, board);
     }
 }
