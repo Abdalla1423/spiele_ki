@@ -111,7 +111,5 @@ def main(file_path):
         draw_board(board, image_number=idx)
 
 # Test the function
-# board = fen_to_board("2b03/1b0b05/6b01/3bb2r01/3r02r01/2b05/2r03r01/3r02")
-# draw_board(board)
-
-main("../jump-sturdy-game-server/00413802.txt")
+board = fen_to_board("2b03/1b0b05/6b01/3b02r01/1b01r02r01/2b05/2r03r01/3r02")
+draw_board(board)
