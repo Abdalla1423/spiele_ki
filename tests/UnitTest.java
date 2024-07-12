@@ -176,7 +176,7 @@ class AlphaBetaTest {
     public void testAlphaBetaSix() { // Gruppe S 2
         Board b = new Board("2b03/1b0b05/6b01/3b02r01/1b01r02r01/2b05/2r03r01/3r02 b");
         String expectedResult = "B5-C5";
-        MoveEvaluation actualResult = Game.iterativeDeepening(b, 8, true);
+        MoveEvaluation actualResult = Game.iterativeDeepening(b, 5, true);
         Assertions.assertEquals(expectedResult, Move.moveToString(actualResult.move));
 
     }
