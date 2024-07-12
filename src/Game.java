@@ -2,7 +2,7 @@ import org.junit.jupiter.api.Assertions;
 
 import java.lang.reflect.Array;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent .TimeUnit;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.max;
@@ -31,26 +31,7 @@ public class Game {
 
     public static int timeManagment(Board board, long time) {
         //abgelaufene Zeit herausfinden
-        int numofplayers = board.numofPlayers();
         return 6;
-        //early Game
-        /*if(numofplayers > 22){
-            return 5;
-        } else if(numofplayers > 20) {
-            return 6;
-        //Mid-Game
-        } else if(numofplayers > 18) {
-            return 7;
-        } else if(numofplayers > 16) {
-            return 7;
-        //End-Game
-        } else if(numofplayers > 14) {
-            return 6;
-        } else if(numofplayers > 12) {
-            return 5;
-        }
-
-         */
     }
 
     public static long numOfSearchedZustand = 0;
@@ -78,7 +59,7 @@ public class Game {
         numOfSearchedZustand = 0;
         MoveEvaluation bestMoveEvaluation = new MoveEvaluation(0, new int[20]);
         for (int depth = 1; depth <= maxDepth; depth++) {
-            maxdepth = depth;
+            // maxdepth = depth;
             bestMoveEvaluation = minimaxAlphaBeta(startBoard, depth, Integer.MIN_VALUE, Integer.MAX_VALUE, useAlphaBeta, new int[20], new ArrayList<int[]>());
 
             /*int alphaAspirationWindow = initialEvaluation - initialWindowSize;
@@ -119,7 +100,7 @@ public class Game {
 
 
             //Umdrehen des Arrays damit Züge in richtiger Reihenfolge
-            int[] bestmovepfadtrash = bestMoveEvaluation.move;
+            /*int[] bestmovepfadtrash = bestMoveEvaluation.move;
             int z = 0;
             for(int i = bestmovepfadtrash.length-2; i > 0; i--) {
                 if(bestmovepfadtrash[i] != 0 ){
@@ -132,6 +113,8 @@ public class Game {
 
             bestMoveEvaluation.move[0] = bestmovepfad[0];
             bestMoveEvaluation.move[1] = bestmovepfad[1];
+
+             */
 
         }
 
@@ -160,7 +143,7 @@ public class Game {
 
         MoveEvaluation bestMove = new MoveEvaluation(board.blauIstDran ? Integer.MIN_VALUE : Integer.MAX_VALUE, new int[20]);
 
-        if(alphabetacutoffmove.containsKey(Arrays.toString(lastMove))){
+        /*if(alphabetacutoffmove.containsKey(Arrays.toString(lastMove))){
             int [] cutoffmove = alphabetacutoffmove.get(Arrays.toString(lastMove));
             List allPossibleMove = allPossibleMoves.stream().filter(i -> i[0] != cutoffmove[0] && i[1] != cutoffmove[1]).toList();
             allPossibleMoves = new ArrayList<>(allPossibleMove);
@@ -176,8 +159,10 @@ public class Game {
             bestmovepfad[(maxdepth-depth)*2] = 0;
         }
 
-        for (int[] moves : allPossibleMoves) {
-            if (moves[0] == frompo && moves[1] == topo & z2!= 0) {
+         */
+
+        for (int[] move : allPossibleMoves) {
+            /*if (moves[0] == frompo && moves[1] == topo & z2!= 0) {
                 //Zug war der beste zug und wurde an erster Stelle gesetzt
             }else{
                 z2++;
@@ -194,6 +179,8 @@ public class Game {
                         z1 += 2;
                     }
                 }
+
+             */
                 Board nextBoard = new Board(board.blauzweiteebene, board.rotzweiteebene, board.blauersteebene, board.rotersteebene);
                 nextBoard.updateBoard(move[0], move[1]);
                 nextBoard.blauIstDran = !board.blauIstDran;
@@ -213,24 +200,24 @@ public class Game {
                 if (board.blauIstDran) {
                     if (eval.evaluation > bestMove.evaluation) {
                         bestMove.evaluation = eval.evaluation;
-                        bestMove.move = eval.move;
+                        bestMove.move = move;
 
                     }
                     alpha = Math.max(alpha, eval.evaluation);
                 } else {
                     if (eval.evaluation < bestMove.evaluation) {
                         bestMove.evaluation = eval.evaluation;
-                        bestMove.move = eval.move;
+                        bestMove.move = move;
                     }
                     beta = Math.min(beta, eval.evaluation);
                 }
 
                 if (useAlphaBeta && beta <= alpha) {
-                    alphabetacutoffmove.put(Arrays.toString(Arrays.copyOfRange(move, 2, 22)), new int[]{move[0], move[1]});
+                    //alphabetacutoffmove.put(Arrays.toString(Arrays.copyOfRange(move, 2, 22)), new int[]{move[0], move[1]});
                     break; // Alpha-beta cut-off
                 }
             }
-        }
+        // }
 
         // Transpositiontable
         //System.out.println("Statements:" + depth + " " + alpha + " " + beta);
