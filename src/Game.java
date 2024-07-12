@@ -54,7 +54,7 @@ public class Game {
     }
 
     public static long numOfSearchedZustand = 0;
-    static HashMap<Integer, int[]> alphabetacutoffmove = new LinkedHashMap<>();
+    static HashMap<String, int[]> alphabetacutoffmove = new LinkedHashMap<>();
 
     static  int maxdepth; // zu currentdepth umbennenen
     static HashMap<BoardDepthKey, MoveEvaluation> transpositionTable = new HashMap<>();
@@ -160,9 +160,11 @@ public class Game {
 
         MoveEvaluation bestMove = new MoveEvaluation(board.blauIstDran ? Integer.MIN_VALUE : Integer.MAX_VALUE, new int[20]);
 
-        if(allPossibleMoves.contains(alphabetacutoffmove.get(depth))){
-            allPossibleMoves.remove(alphabetacutoffmove.get(depth));
-            allPossibleMoves.add(0, alphabetacutoffmove.get(depth));
+        if(alphabetacutoffmove.containsKey(Arrays.toString(lastMove))){
+            int [] cutoffmove = alphabetacutoffmove.get(Arrays.toString(lastMove));
+            List allPossibleMove = allPossibleMoves.stream().filter(i -> i[0] != cutoffmove[0] && i[1] != cutoffmove[1]).toList();
+            allPossibleMoves = new ArrayList<>(allPossibleMove);
+            allPossibleMoves.add(0, cutoffmove);
         }
 
         int frompo = bestmovepfad[(maxdepth-depth)*2];
@@ -224,7 +226,7 @@ public class Game {
                 }
 
                 if (useAlphaBeta && beta <= alpha) {
-                    alphabetacutoffmove.put(depth, move);
+                    alphabetacutoffmove.put(Arrays.toString(Arrays.copyOfRange(move, 2, 22)), new int[]{move[0], move[1]});
                     break; // Alpha-beta cut-off
                 }
             }
