@@ -7,11 +7,11 @@ class MonteCarloTreeSearch {
     public class Node {
         Node parent;
         ArrayList<Node> childNodes;
-        boolean blauIstDran;
+        boolean blauIstDran; //true, wenn Spieler blau dran ist, zum Zeitpunkt wo der move dieses Nodes ausgeführt wird
         int score;
         int visitCount;
         int [] move;
-        Board currentBoard;
+        Board currentBoard; //Board, nachdem der move dieser node ausgeführt wurde
 
         public Node(Node parent, boolean blauIstDran, int [] move, Board currentBoard) {
             this.parent = parent;
@@ -28,29 +28,26 @@ class MonteCarloTreeSearch {
         MonteCarloTreeSearch mcts = new MonteCarloTreeSearch();
         Node rootnode= mcts.new Node(null, !board.blauIstDran, null, board);
         Node winnerNode= mcts.monteCarloTreeSearch(rootnode);
+        mcts.printScores(rootnode);
         return Move.moveToString(winnerNode.move);
     }
 
     public Node monteCarloTreeSearch(Node rootNode) {
-        Node winnerNode;
-        double timeLimit;
-        addChildNodes(rootNode, Move.possibleMoves(rootNode.currentBoard).size());
-        timeLimit = System.currentTimeMillis() + TIME_LIMIT;
+        double timeLimit = System.currentTimeMillis() + TIME_LIMIT;
+        addChildNodes(rootNode);
 
         while (System.currentTimeMillis() < timeLimit) {
             Node promisingNode;
-
             promisingNode = getPromisingNode(rootNode);
 
             if (promisingNode.childNodes.size() == 0) {
-                addChildNodes(promisingNode, Move.possibleMoves(promisingNode.currentBoard).size());
+                addChildNodes(promisingNode);
             }
 
             simulateRandomPlay(promisingNode);
         }
 
-        winnerNode = getWinnerNode(rootNode);
-        return winnerNode;
+        return getWinnerNode(rootNode);
     }
 
     public Board deepCopyBoard(Board original){
@@ -59,20 +56,15 @@ class MonteCarloTreeSearch {
         return nextBoard;
     }
 
-    public void addChildNodes(Node node, int childCount) {
-        if (Game.thisPlayerHasWon(node.currentBoard) == Player.EMPTY){
+    public void addChildNodes(Node node) {
+        if (Game.thisPlayerHasWon(node.currentBoard) == Player.EMPTY){ //wenn ein Spieler schon gewonnen hat, muss die Suche abgebrochen werden (Test 9 failed ohne diese Bedingung)
             ArrayList<int[]> possibleMoves = Move.possibleMoves(node.currentBoard);
-            Random rand = new Random();
-            for (int i = 0; i < childCount; i++) {
-                if(!possibleMoves.isEmpty()){
-                    int index= rand.nextInt(possibleMoves.size());
-                    int[] chosenMove= possibleMoves.get(index);
-                    possibleMoves.remove(index);
-                    Board updatedBoard = deepCopyBoard(node.currentBoard);
-                    updatedBoard.updateBoard(chosenMove[0], chosenMove[1]);
-                    updatedBoard.blauIstDran= !node.currentBoard.blauIstDran;
-                    node.childNodes.add(new Node(node, !node.blauIstDran, chosenMove, updatedBoard));
-                }
+            for (int i = 0; i < possibleMoves.size(); i++) {
+                int[] chosenMove= possibleMoves.get(i);
+                Board updatedBoard = deepCopyBoard(node.currentBoard);
+                updatedBoard.updateBoard(chosenMove[0], chosenMove[1]);
+                updatedBoard.blauIstDran= !node.currentBoard.blauIstDran;
+                node.childNodes.add(new Node(node, !node.blauIstDran, chosenMove, updatedBoard));
             }
         }
     }
@@ -121,7 +113,7 @@ class MonteCarloTreeSearch {
                 gameState.updateBoard(currentMove[0], currentMove[1]);
                 gameState.blauIstDran= !gameState.blauIstDran;
             } else {
-                BlueWon = gameState.blauIstDran;
+                BlueWon = !gameState.blauIstDran;
                 break;
             }
         }
