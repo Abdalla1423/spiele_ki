@@ -2,7 +2,7 @@ import com.google.gson.Gson;
 
 import java.util.Scanner;
 
-public class Client {
+public class ClientMcts {
 
     public static void main(String[] args) {
         while (true) {
@@ -41,7 +41,8 @@ public class Client {
                         //TODO: add your AI getMove() call here
                         //answer must have format: start_field-end_field like E7-F7
                         // String input = scanner.nextLine();
-                        String input = Game.getMove(game.board);
+                        Board b = new Board(game.board);
+                        String input = MonteCarloTreeSearch.getMctsResult(b);
 
                         // transforms the input move to JSON
                         String data = gson.toJson(input);
@@ -51,10 +52,10 @@ public class Client {
                     } else if (player == 1 && game.player2) {
                         //TODO: do the same here
                         System.out.println("New Board: " + game.board);
-                        String input = Game.getMove(game.board);
+                        Board b = new Board(game.board);
+                        String input = MonteCarloTreeSearch.getMctsResult(b);
                         String data = gson.toJson(input);
                         n.send(data);
-                        String b = "w";
                     }
                 }
             } catch (Exception e) {
