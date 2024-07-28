@@ -1,8 +1,10 @@
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Random;
 
 class MonteCarloTreeSearch {
-    static final int TIME_LIMIT = 2000;
+    static final int TIME_LIMIT = 6000;
     static  final int WIN_SCORE = 1;
     public class Node {
         Node parent;
@@ -28,7 +30,6 @@ class MonteCarloTreeSearch {
         MonteCarloTreeSearch mcts = new MonteCarloTreeSearch();
         Node rootnode= mcts.new Node(null, !board.blauIstDran, null, board);
         Node winnerNode= mcts.monteCarloTreeSearch(rootnode);
-        mcts.printScores(rootnode);
         return Move.moveToString(winnerNode.move);
     }
 
@@ -76,17 +77,17 @@ class MonteCarloTreeSearch {
 
             for (int i = 0; i < promisingNode.childNodes.size(); i++) {
                 Node childNode = promisingNode.childNodes.get(i);
-                double uctTemp;
+                double uctTemporary;
 
                 if (childNode.visitCount == 0) {
                     bestNode = childNode;
                     break;
                 }
 
-                uctTemp = ((double) childNode.score / (double) childNode.visitCount) + 1.41 * Math.sqrt(Math.log(promisingNode.visitCount) / (double) childNode.visitCount);
+                uctTemporary = ((double) childNode.score / (double) childNode.visitCount) + 1.41 * Math.sqrt(Math.log(promisingNode.visitCount) / (double) childNode.visitCount);
 
-                if (uctTemp > uctIndex) {
-                    uctIndex = uctTemp;
+                if (uctTemporary > uctIndex) {
+                    uctIndex = uctTemporary;
                     bestNode = childNode;
                 }
             }
@@ -124,6 +125,8 @@ class MonteCarloTreeSearch {
         current.visitCount++;
         if (current.blauIstDran == BlueWon) {
             current.score += WIN_SCORE;
+        } else {
+            current.score -= WIN_SCORE;
         }
         if (current.parent == null){
             return;
@@ -132,14 +135,7 @@ class MonteCarloTreeSearch {
     }
 
     public Node getWinnerNode(Node rootNode) {
-        ArrayList<Node> candidates = rootNode.childNodes;
-        Node best= candidates.get(0);
-        for(int i =0;i< candidates.size();i++){
-            if (candidates.get(i).score > best.score){
-                best= candidates.get(i);
-            }
-        }
-        return best;
+        return Collections.max(rootNode.childNodes, Comparator.comparing(c -> c.score));
     }
 
     public void printScores(Node rootNode) {
