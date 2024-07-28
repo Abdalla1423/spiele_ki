@@ -61,7 +61,6 @@ public class Game {
 
         for (int depth = 1; depth <= maxDepth; depth++) {
             maxdepth = depth;
-            bestMoveEvaluation = minimaxAlphaBeta(startBoard, depth, Integer.MIN_VALUE, Integer.MAX_VALUE, useAlphaBeta, new int[20], new ArrayList<>());
 
             int alphaAspirationWindow = initialEvaluation - initialWindowSize;
             int betaAspirationWindow = initialEvaluation + initialWindowSize;
@@ -128,7 +127,7 @@ public class Game {
             return new MoveEvaluation(evaluation, lastMove);
         }
 
-        // Generate all possible moves
+        // Generate all possible moves and check it the player has moves left
         ArrayList<int[]> allPossibleMoves = Move.possibleMoves(board);
         if (allPossibleMoves.isEmpty()) {
             if (board.blauIstDran) {
