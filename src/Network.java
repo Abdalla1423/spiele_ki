@@ -6,22 +6,29 @@ class Network {
     private BufferedReader in;
     private PrintWriter out;
     private String server = "localhost";
-    //port on which the server.py is running, add to Network constructor if necessary
-    private int port = 5555;
-    private String p;
+    private int port = 5555; // Port on which the server.py is running
+    private String p; // Player number
 
+    /**
+     * Constructor that establishes a connection to the server.
+     */
     public Network() {
         try {
             client = new Socket(server, port);
             in = new BufferedReader(new InputStreamReader(client.getInputStream()));
             out = new PrintWriter(client.getOutputStream(), true);
-            p = readPlayerNumber(); //alternative for in.readLine();
-            //p = in.readLine(); TODO: use this if python server.py is changed
+            p = readPlayerNumber(); // Read the player number from the server
+            // p = in.readLine(); // TODO: use this if python server.py is changed
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * Reads the player number from the server.
+     *
+     * @return The player number as a string.
+     */
     private String readPlayerNumber() {
         char value;
         String tmp = "";
@@ -30,17 +37,22 @@ class Network {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        tmp += (char) value;
+        tmp += value;
         return tmp;
     }
 
+    /**
+     * Reads the response from the server until the end of the JSON object is reached.
+     *
+     * @return The server response as a string.
+     */
     private String readResponse() {
         int value;
-        String tmp = "";
+        StringBuilder tmp = new StringBuilder();
         while (true) {
             try {
                 value = in.read();
-                tmp += (char) value;
+                tmp.append((char) value);
                 if ((char) value == '}') {
                     break;
                 }
@@ -48,23 +60,32 @@ class Network {
                 throw new RuntimeException(e);
             }
         }
-        return tmp;
+        return tmp.toString();
     }
 
+    /**
+     * Gets the player number.
+     *
+     * @return The player number as a string.
+     */
     public String getP() {
         return p;
     }
 
+    /**
+     * Sends data to the server and receives the response.
+     *
+     * @param data The data to be sent to the server.
+     * @return The response from the server as a string.
+     */
     public String send(String data) {
         try {
             out.println(data);
-            return readResponse(); //alternative for in.readLine();
-            //return in.readLine(); TODO: use this if python server.py is changed
+            return readResponse(); // Read the response from the server
+            // return in.readLine(); // TODO: use this if python server.py is changed
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 }
-
-

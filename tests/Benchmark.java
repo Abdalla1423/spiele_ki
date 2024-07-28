@@ -2,7 +2,7 @@
 public class Benchmark {
     public void benchmarkRuntime(String board, String gameState) { // Early Game
         System.out.println("Benchmark " + gameState);
-        /*System.out.println(" ");
+        System.out.println(" ");
         Board b = new Board(board);
 
         // Zuggenerator
@@ -56,9 +56,6 @@ public class Benchmark {
             System.out.println(" ");
         }
 
-         */
-        MoveEvaluation res = null;
-        Board b = new Board(board);
         System.out.println("Alpha-Beta");
         // AlphaBeta
         for (int depth = 1; depth <= 5; depth++) {
