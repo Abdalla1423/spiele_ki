@@ -230,3 +230,106 @@ class AlphaBetaTest {
     }
 }
 
+class MctsTest{
+    @Test
+    public void testAlphaBetaOne() { // Gruppe G 1
+        Board b = new Board("b02b01b0/4r03/1b02r03/1bb6/8/4r0b02/1r03r02/r01r02r0 r");
+        String expectedResult = "E3-E2";
+        String actualResult = MonteCarloTreeSearch.getMctsResult(b);
+        Assertions.assertEquals(expectedResult, actualResult);
+    }
+
+
+    @Test
+    public void testAlphaBetaOnePtFive() { // Gruppe G 2
+        Board b = new Board("b02b01b0/2b03b01/2r0b04/8/6rr1/3b02r01/3b04/r01r02r0 b");
+        String expectedResult = "D6-D7";
+        String actualResult = MonteCarloTreeSearch.getMctsResult(b);
+        Assertions.assertEquals(expectedResult, actualResult);
+    }
+
+
+
+    @Test
+    public void testAlphaBetaTwo() { // Gruppe G 2
+        Board b = new Board("1b01b01b0/1b06/3b04/8/4b0r02/2b03r01/3r0r03/r03r01 b");
+        String expectedResult = "C6-D7";
+        String actualResult = MonteCarloTreeSearch.getMctsResult(b);
+        Assertions.assertEquals(expectedResult, actualResult);
+    }
+
+    @Test
+    public void testAlphaBetaThree() { // Gruppe T 1
+        Board b = new Board("1b0b0b02/8/3b04/3b04/r0r06/2b05/5r0r01/6 b");
+        String expectedResult = "C6-C7";
+        String actualResult = MonteCarloTreeSearch.getMctsResult(b);
+        Assertions.assertEquals(expectedResult, actualResult);
+    }
+
+    @Test
+    public void testAlphaBetaFour() { // Gruppe T 2
+        Board b = new Board("6/4bb3/8/8/4b0r0b01/8/8/6 b");
+        String expectedResult = "E2-F4";
+        String actualResult = MonteCarloTreeSearch.getMctsResult(b);
+        Assertions.assertEquals(expectedResult, actualResult);
+    }
+
+    @Test
+    public void testAlphaBetaFive() { // Gruppe S 1
+        Board b = new Board("2b03/1b0b05/6b01/3bb2r01/3r02r01/2b05/2r03r01/3r02 b");
+        String expectedResult = "D4-C6";
+        String actualResult = MonteCarloTreeSearch.getMctsResult(b);
+        Assertions.assertEquals(expectedResult, actualResult);
+    }
+
+    @Test
+    public void testAlphaBetaSix() { // Gruppe S 2
+        Board b = new Board("2b03/1b0b05/6b01/3b02r01/1b01r02r01/2b05/2r03r01/3r02 b");
+        String expectedResult = "B5-C5";
+        String actualResult = MonteCarloTreeSearch.getMctsResult(b);
+        Assertions.assertEquals(expectedResult, actualResult);
+    }
+
+    @Test
+    public void testAlphaBetaSeven() { // Gruppe J 1
+        Board b = new Board("6/1bb1b0bbb0b01/r02b04/2b01b0b02/2r02r02/1r02rrr02/6rr1/2r01r01 r");
+        String expectedResult = "A3-B2";
+        String actualResult = MonteCarloTreeSearch.getMctsResult(b);
+        Assertions.assertEquals(expectedResult, actualResult);
+    }
+
+
+    @Test
+    public void testAlphaBetaSevenPtFive() { // Gruppe J 1
+        Board b = new Board("1b01b02/1bb6/2b0bb2b01/2b02b02/2r0r01r02/4r02b0/1r0r0rrr01rr1/6 b");
+        String expectedResult = "H6-G7";
+        String actualResult = MonteCarloTreeSearch.getMctsResult(b);
+        Assertions.assertEquals(expectedResult, actualResult);
+    }
+
+
+
+    @Test
+    public void testAlphaBetaEight() { // Gruppe J 2
+        Board b = new Board("3b02/1bb6/1r0b02r02/2r05/4r03/8/2r03r01/6 r");
+        String expectedResult = "B3-A3";
+        String actualResult = MonteCarloTreeSearch.getMctsResult(b);
+        Assertions.assertEquals(expectedResult, actualResult);
+    }
+
+    @Test
+    public void testAlphaBetaNine() { // Gruppe R 1
+        Board b = new Board("2b03/r07/3r04/6rr1/4bb3/2b04bb/3rr1rr2/5r0 b");
+        String expectedResult = "H6-G8";
+        String actualResult = MonteCarloTreeSearch.getMctsResult(b);
+        Assertions.assertEquals(expectedResult, actualResult);
+    }
+
+    @Test
+    public void testAlphaBetaTen() { // Gruppe R 2
+        Board b = new Board("6/3b01b02/4bb3/1bb6/3rr1r02/8/4r03/6 r");
+        String expectedResult = "D5-B4";
+        String actualResult = MonteCarloTreeSearch.getMctsResult(b);
+        Assertions.assertEquals(expectedResult, actualResult);
+    }
+}
