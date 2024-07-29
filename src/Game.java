@@ -52,10 +52,12 @@ public class Game {
      * @return The best move evaluation.
      */
     public static MoveEvaluation iterativeDeepening(Board startBoard, int maxDepth, boolean useAlphaBeta) {
+        //Initialize window size and increment for aspiration windows
         int initialWindowSize = 50;
         int windowSizeIncrement = 70;
         int initialEvaluation = 0;
 
+        //benchmark counter
         numOfSearchedZustand = 0;
         MoveEvaluation bestMoveEvaluation = new MoveEvaluation(0, new int[20]);
 
@@ -78,14 +80,12 @@ public class Game {
                 bestMoveEvaluation = minimaxAlphaBeta(startBoard, depth, alphaAspirationWindow, betaAspirationWindow, useAlphaBeta, new int[20], new ArrayList<>());
                 initialEvaluation = bestMoveEvaluation.evaluation;
 
-                // If still outside the window, fall back to normal alpha-beta
+                // If still outside the window, fall back to full range alpha-beta
                 if (bestMoveEvaluation.evaluation <= alphaAspirationWindow || bestMoveEvaluation.evaluation >= betaAspirationWindow) {
                     bestMoveEvaluation = minimaxAlphaBeta(startBoard, depth, Integer.MIN_VALUE, Integer.MAX_VALUE, useAlphaBeta, new int[20], new ArrayList<>());
                     initialEvaluation = bestMoveEvaluation.evaluation;
                 }
             }
-
-            // Update the initial evaluation for the next iteration
 
             // Reverse the array to get moves in correct order
             int[] bestmovepfadtrash = bestMoveEvaluation.move;
