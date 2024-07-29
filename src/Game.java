@@ -4,7 +4,7 @@ public class Game {
     // Constants and variables
     public static long numOfSearchedZustand = 0;
     static HashMap<String, int[]> alphabetacutoffmove = new LinkedHashMap<>();
-    static int maxdepth; // zu currentdepth umbennenen
+    static int maxdepth;
     static HashMap<BoardDepthKey, MoveEvaluation> transpositionTable = new HashMap<>();
     static int[] bestmovepfad = new int[20];
 
@@ -180,7 +180,7 @@ public class Game {
                 currMoves.add(move);
                 MoveEvaluation eval;
 
-                // Transposition table
+                // Check if Board existed at that depth already and was saved in the Transposition table
                 BoardDepthKey key = new BoardDepthKey(board, depth);
                 if (transpositionTable.containsKey(key)) {
                     eval = transpositionTable.get(key);
@@ -211,7 +211,7 @@ public class Game {
             }
         }
 
-        // Transposition table
+        // save Board inside Transposition table
         transpositionTable.put(new BoardDepthKey(board, depth), bestMove);
 
         return bestMove;
